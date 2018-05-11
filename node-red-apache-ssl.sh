@@ -73,7 +73,7 @@ sudo systemctl restart apache2
 sudo add-apt-repository -y ppa:certbot/certbot
 sudo apt-get update
 sudo apt-get install -y python-certbot-apache
-# Génération des certificats Let's Encrypt
+# Génération des certificats Let's Encrypt pour le domaine et le sous-domaine
 sudo certbot --agree-tos --no-eff-email -m $4 -d $2,$1.$2 --apache certonly
 # Modification du vhost pour le sous-domaine (configuration SSL)
 sudo cat >$1.$2.conf <<EOL
