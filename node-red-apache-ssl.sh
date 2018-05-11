@@ -8,6 +8,9 @@
 # Versioning : https://github.com/CedricGoby/linux-server-install
 # Ressources : https://nodered.org/ - https://httpd.apache.org/ - https://certbot.eff.org/docs/
 
+# Fichier de configuration de node-red (utilisateur qui lance node-red)
+_node-red-config-file="/home/$3/.node-red/settings.js"
+
 # Mise à jour du système
 sudo apt-get install && sudo apt-get upgrade -y
 # Installation de nodejs LTS
@@ -45,6 +48,8 @@ EOL
 sudo chown root:root node-red.service
 sudo mv node-red.service /etc/systemd/system/
 sudo systemctl enable node-red
+# Modification de la configuration de node-red : autoriser uniquement les connexions sur l'interface locale (127.0.0.1)
+sed -i 's#//uiHost#uiHost#' "$_node-red-config-file"
 # Démarrage manuel de node-red
 sudo systemctl start node-red
 # Installation d'Apache
