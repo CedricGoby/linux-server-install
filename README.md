@@ -1,5 +1,5 @@
 # linux-server-install
-Scripts pour l'installation de serveurs Linux
+Scripts d'installation pour serveurs Linux
 
 ## node-red-apache-ssl.sh
 Installation de node-red, apache et certbot (Let's encrypt) sous Ubuntu 16.04 LTS.<br />
