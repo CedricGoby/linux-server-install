@@ -24,7 +24,7 @@
 
 # Licence : GPL-3+
 # Auteur : Cédric Goby
-# Versioning : https://github.com/CedricGoby/linux-server-install
+# Versioning : https://gitlab.com/CedricGoby/linux-server-install
 # Ressources : https://nodered.org/ - https://httpd.apache.org/ - https://certbot.eff.org/docs/
 
 # Fichier de configuration de node-red (utilisateur qui lance node-red au démarrage)
