@@ -13,7 +13,7 @@ SSL certificate generation with certbot.<br />
 Node-red configuration for a sub-domain with Apache proxy and SSL.<br />
 Startup script for node-red with a non-root user.
 
-### Prérequis / prerequisite ###
+### Prérequis / prerequisite
 Une installation fraîche d'Ubuntu 16.04 LTS.<br />
 Un domaine et un sous-domaine pointant vers le serveur.<br />
 Un utilsateur avec les droits sudo (cet utilisateur lance le script).
@@ -21,3 +21,6 @@ Un utilsateur avec les droits sudo (cet utilisateur lance le script).
 Ubuntu 16.04 fresh install.<br />
 A domain and a sud-domain pointing to the server.
 A user with sudo rights (this user launch this script).
+
+## apache-vhosts
+Vhosts SSL Apache pour différentes applications serveur
