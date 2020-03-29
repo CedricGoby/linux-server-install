@@ -334,12 +334,6 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Ajout d'un pseudo user pour msmtp
-	printf "\n%s\n" "Ajout d'un pseudo user pour $_package"
-	_cmd="useradd $_package -g nogroup -s /sbin/nologin -c 'mSMTP pseudo-user' >/dev/null 2>>"$_file_logs""
-	_cmd_text="Ajout d'un pseudo user pour $_package..."
-	f_cmd "$_cmd" "$_cmd_text"
-	
 	# Application des droits et propriétés sur les fichiers de configuration
 	printf "\n%s\n" "Application des droits et propriétés sur les fichiers de configuration"
 	_cmd="chmod 600 "$_file_config_msmtp" && chown $_package "$_file_config_msmtp""
