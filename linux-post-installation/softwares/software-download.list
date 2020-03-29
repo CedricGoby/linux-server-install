@@ -12,4 +12,4 @@
 # Veracrypt
 #veracrypt-1.21-setup.tar.bz2	https://launchpad.net/veracrypt/trunk/1.21/+download/veracrypt-1.21-setup.tar.bz2 sha512sum	367f9c86e4106ed6589e256a89b4c6b75badcc22a37906182dfcb5dacf12a7b513a447a86b14384105295be2f7199d545e359c1edd468dc44c34639f63957a34
 # Docker Compose
-docker-compose	https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64	sha256sum	2bdab0bbf42583b4b77ee015cf908933c78f0572a7cb949a7dd8e200e6250221	binary
+docker-compose	https://github.com/docker/compose/releases/download/1.25.4/docker-compose-Linux-x86_64	sha256sum	542e93b1d5106d2769b325f60ba9a0ba087bb96e30dc2c1cb026f0cb642e9aed	binary
