@@ -1,0 +1,48 @@
+#------------------------------------------
+# Variables
+#------------------------------------------
+### LOGS
+# Fichier de logs
+_file_logs="logs/ubuntu-server-18.04-post-install.log"
+
+### COMPATIBILITÉ
+# OS compatible avec le script
+_os_target="bionic"
+# OS de l'hôte
+_os_current=$(lsb_release -cs)
+
+### PAQUETS
+# Fichier source.list
+_file_source_list="/etc/apt/sources.list"
+# Fichier liste des clés GPG à télécharger
+_src_gpg_keys_download="softwares/gpg-keys-download.list"
+# Fichier liste des dépôts
+_src_pkg_repository="softwares/repository-in.list"
+# Fichier liste des logiciels à télécharger
+_src_software_download="softwares/software-download.list"
+# Fichier liste des paquets à désinstaller
+_src_pkg_out="softwares/pkg-out.list"
+# Fichier liste des paquets à installer
+_src_pkg_in="softwares/pkg-in.list"
+### FICHIERS SYSTÈMES
+# Fichier crontab
+_file_crontab="/etc/crontab"
+
+## SSH
+# Fichier de configuration SSH
+_file_sshd_config="/etc/ssh/sshd_config"
+# Fichier de clés
+_file_authorized_keys="/root/.ssh/authorized_keys"
+
+### FICHIERS DE CONFIGURATION
+## msmtp
+# Fichier source pour msmtp
+_src_msmtp="templates/msmtprc.src"
+_file_config_msmtp="/etc/msmtprc"
+## fail2ban
+# Fichier source de configuration pour fail2ban
+_src_config_fail2ban="/etc/fail2ban/jail.conf"
+# Fichier de configuration pour fail2ban
+_file_config_fail2ban="/etc/fail2ban/jail.local"
+## logwatch
+_file_config_logwatch="/usr/share/logwatch/default.conf/logwatch.conf"

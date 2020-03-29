@@ -1,0 +1,12 @@
+# Liste de dépôts à installer avec apt (un paquet par ligne)
+# Commenter avec # pour ne pas traiter un dépôt
+# Séparateur de colonne : tab
+# Colonne 1 : nom du dépôt
+# Colonne 2 : URL du dépôt
+#
+# Let's Encrypt
+certbot	ppa:certbot/certbot	ppa
+#docker
+docker	deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable	deb
+#grafana
+#grafana	deb https://packages.grafana.com/oss/deb stable main	deb
