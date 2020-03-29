@@ -41,7 +41,7 @@ printf "\n%s\n" "Script de post installation pour Ubuntu server 18.04 lts (bioni
 # Vérification de l'exécution du script avec sudo
 #-----------------------------------------------------------------------
 if [[ $(id -u) != 0 ]]; then
-	printf "\n%s\n%s\n\n" "[ ERREUR ] --> Vous devez lancer le script avec sudo ou être root." "Usage : sudo ubuntu-server-18.04-post-install.sh"
+	printf "\n%s\n%s\n\n" "[ ERREUR ] --> Vous devez lancer le script avec sudo ou être root." "Usage : sudo ./ubuntu-server-18.04-post-install.sh"
 	exit 0
 fi
 
