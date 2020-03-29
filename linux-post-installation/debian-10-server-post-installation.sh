@@ -94,7 +94,7 @@ printf "\n%s\n" "PARAMÉTRAGE OPENSSH"
 #-----------------------------------------------------------------------
 # Copier une clé publique
 #-----------------------------------------------------------------------
-printf "\n%s" "Souhaitez-vous copier une clé publique pour root ? (yYoO / nN)"
+printf "\n%s" "Souhaitez-vous copier une clé publique pour "$USER" ? (yYoO / nN)"
 
 read choice
 	case $choice in
