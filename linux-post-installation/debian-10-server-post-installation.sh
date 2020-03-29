@@ -79,7 +79,7 @@ _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 # Installation des logiciels pour l'installation de paquets
-_cmd="apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates git >/dev/null 2>>"$_file_logs""
+_cmd="apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates curl >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pour l'installation de paquets..."
 f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
@@ -120,7 +120,7 @@ read choice
 				esac
 			
 			# Redémarrage du service SSH
-			_cmd="service ssh restart >/dev/null 2>>"$_file_logs""
+			_cmd="systemctl restart sshd >/dev/null 2>>"$_file_logs""
 			_cmd_text="Redémarrage du service SSH..."
 			f_cmd "$_cmd" "$_cmd_text";;			
 			
