@@ -25,7 +25,7 @@
 # conf/software-download.list : Logiciels à télécharger et installer (hors dépôts)
 #
 ## Journaux
-# logs/ubuntu-server-18.04-post-install.log
+# logs/bionic-post-install.log
 
 printf "\n%s\n" "Script de post installation pour Ubuntu server 18.04 lts (bionic beaver)"
 

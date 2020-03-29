@@ -25,7 +25,7 @@
 # conf/software-download.list : Logiciels à télécharger et installer (hors dépôts)
 #
 ## Journaux
-# logs/debian-10-server-post-install.log
+# logs/buster-post-install.log
 
 printf "\n%s\n" "Script de post installation pour Debian 10 server (buster)"
 
@@ -41,7 +41,7 @@ printf "\n%s\n" "Script de post installation pour Debian 10 server (buster)"
 # Vérification de l'exécution du script avec sudo
 #-----------------------------------------------------------------------
 if [[ $(id -u) != 0 ]]; then
-	printf "\n%s\n%s\n\n" "[ ERREUR ] --> Vous devez lancer le script avec sudo ou être root." "Usage : sudo ubuntu-server-18.04-post-install.sh"
+	printf "\n%s\n%s\n\n" "[ ERREUR ] --> Vous devez lancer le script avec sudo ou être root." "Usage : sudo debian-10-server-post-install.sh"
 	exit 0
 fi
 
