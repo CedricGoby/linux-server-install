@@ -34,8 +34,10 @@ _file_crontab="/etc/crontab"
 ## SSH
 # Fichier de configuration SSH
 _file_sshd_config="/etc/ssh/sshd_config"
+# Dossier clés utilisateur
+_dir_ssh="~/.ssh"
 # Fichier de clés
-_file_authorized_keys="/root/.ssh/authorized_keys"
+_file_authorized_keys="~/.ssh/authorized_keys"
 
 ### FICHIERS DE CONFIGURATION
 ## msmtp

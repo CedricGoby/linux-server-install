@@ -99,7 +99,16 @@ printf "\n%s" "Souhaitez-vous copier une clé publique pour root ? (yYoO / nN)"
 read choice
 	case $choice in
 	  [yYoO]*) read -p "Clé publique : " _public_key
-			# Copie de la clé publique dans le fichier /etc/ssh/sshd_config
+			# Si le dossier ~/.ssh et le fichier ~/.ssh/authorized_keys n'existent pas ils sont créés
+			if [ ! -d "$_dir_ssh" ]; then
+				_cmd='mkdir "$_dir_ssh" && touch "$_file_authorized_keys"'
+				_cmd_text="Création du fichier "$_dir_ssh/$_file_authorized_keys"..."
+				f_cmd "$_cmd" "$_cmd_text"
+				_cmd='chmod 700 "$_dir_ssh" && chmod 600 "$_file_authorized_keys"'
+				_cmd_text="Application des droits sur "$_dir_ssh/$_file_authorized_keys"..."
+				f_cmd "$_cmd" "$_cmd_text"								
+			fi
+			# Copie de la clé publique dans le fichier ~/.ssh/authorized_keys
 			_cmd='echo -e "$_public_key" >> $_file_authorized_keys'
 			_cmd_text="Copie de la clé publique dans le fichier "$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
