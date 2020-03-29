@@ -98,7 +98,7 @@ printf "\n%s" "Souhaitez-vous copier une clé publique pour un utilisateur ? (yY
 
 read choice
 	case $choice in
-	  [yYoO]*) read -p "Utilisateur : " _user
+		[yYoO]*) read -p "Utilisateur : " _user
 			read -p "Clé publique : " _public_key
 			# Si le dossier .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
@@ -134,8 +134,8 @@ read choice
 			_cmd_text="Redémarrage du service SSH..."
 			f_cmd "$_cmd" "$_cmd_text";;			
 			
-	  [nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
-	  *) printf "%s\n" "Erreur de saisie. Suite du programme...";;
+		[nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
+		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
 
 ########################################################################
@@ -407,6 +407,22 @@ _crontab_job="15 01   * * 0   root    /usr/bin/apt-get update && /usr/bin/apt-ge
 _cmd='echo -e "$_crontab_job" >> $_file_crontab'
 _cmd_text="Planification de la mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
+
+########################################################################
+# RAPPORT
+########################################################################
+# Envoi du fichier de logs 
+printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"
+
+read choice
+	case $choice in
+		[yYoO]*) read -p "Destinataire : " _dest
+			_cmd="mail -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
+			_cmd_text="Envoi du fichier de logs à "$_dest""
+			f_cmd "$_cmd" "$_cmd_text"
+		[nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
+		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
+	esac
 
 ########################################################################
 # FIN DE PROGRAMME
