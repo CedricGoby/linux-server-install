@@ -9,7 +9,7 @@
 certbot	ppa:certbot/certbot	ppa
 #docker
 # Ubuntu
-docker	deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable	deb
+#docker	deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable	deb
 # Debian
 docker	deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable	deb
 #grafana
