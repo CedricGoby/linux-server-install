@@ -3,11 +3,14 @@
 #------------------------------------------
 ### LOGS
 # Fichier de logs
-_file_logs="logs/ubuntu-server-18.04-post-install.log"
+_file_logs="logs/$(lsb_release -cs)-post-install.log"
 
 ### COMPATIBILITÉ
 # OS compatible avec le script
-_os_target="bionic"
+# Ubuntu server 18.04 LTS (bionic)
+#_os_target="bionic"
+# Debian 10 server (buster)
+_os_target="buster"
 # OS de l'hôte
 _os_current=$(lsb_release -cs)
 

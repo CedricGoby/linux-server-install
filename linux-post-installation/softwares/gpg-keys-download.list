@@ -6,6 +6,9 @@
 # Colonne 3 : Empreinte de la clé
 #
 # Docker
-docker	https://download.docker.com/linux/ubuntu/gpg	9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+# Ubuntu
+# docker	https://download.docker.com/linux/ubuntu/gpg	9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+# Debian
+docker	https://download.docker.com/linux/debian/gpg	9DC858229FC7DD38854AE2D88D81803C0EBFCD88
 # Grafana
 #grafana	https://packages.grafana.com/gpg.key	4E40DDF6D76E284A4A6780E48C8C34C524098CB6

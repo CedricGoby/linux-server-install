@@ -3,10 +3,14 @@
 # Séparateur de colonne : tab
 # Colonne 1 : nom du dépôt
 # Colonne 2 : URL du dépôt
+# Colonne 3 : type de dépôt
 #
 # Let's Encrypt
 certbot	ppa:certbot/certbot	ppa
 #docker
+# Ubuntu
 docker	deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable	deb
+# Debian
+docker	deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable	deb
 #grafana
 #grafana	deb https://packages.grafana.com/oss/deb stable main	deb
