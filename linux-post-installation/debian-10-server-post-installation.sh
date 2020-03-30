@@ -341,9 +341,10 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Test du MTA
-	ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package" \
-	&& echo "Le MTA est bien configuré avec $_package" >>"$_file_logs" \
-	|| echo "ATTENTION, LE MTA N'EST PAS CONFIGURÉ AVEC msmtp" >>"$_file_logs"
+	printf "\n%s\n" "Test du MTA"
+	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
+	_cmd_text="Test du MTA"
+	f_cmd "$_cmd" "$_cmd_text"	
 fi
 
 #-----------------------------------------------------------------------
