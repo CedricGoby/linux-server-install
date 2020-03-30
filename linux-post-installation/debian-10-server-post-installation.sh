@@ -364,7 +364,7 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Redémarrage du service
-	_cmd="service fail2ban restart"
+	_cmd="systemctl restart fail2ban"
 	_cmd_text="Redémarrage du service fail2ban..."
 	f_cmd "$_cmd" "$_cmd_text"
 fi
