@@ -315,7 +315,7 @@ _package="msmtp"
 if f_check_for_package "$_package"; then
 	# Copie du fichier de configuration pour msmtp
 	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
-	_cmd_text="Copie du fichier modèle pour msmtp..."
+	_cmd_text="Copie du fichier de configuration pour msmtp..."
 	f_cmd "$_cmd" "$_cmd_text"
 	printf "\n%s\n" "Configuration de $_package"
 	# Prompt utilisateur
@@ -350,7 +350,7 @@ if f_check_for_package "$_package"; then
 			_gpg_conf_dir="/root/.gnupg"
 		fi
 		_cmd='mkdir "$_gpg_conf_dir" && cp "$_src_config_gpg" "$_gpg_conf_dir/$_file_config_gpg"'
-		_cmd_text="Création du fichier "$_gpg_conf_dir/$_file_config_gpg"..."
+		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
 		_cmd='chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir/$_file_config_gpg"'
 		_cmd_text="Application des droits sur "$_gpg_conf_dir/$_file_config_gpg"..."
