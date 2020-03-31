@@ -330,7 +330,7 @@ if f_check_for_package "$_package"; then
 	#_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	
 	gpg --full-generate-key
-	exit 0
+
 	echo "$_password" > /etc/.msmtp-password
 	gpg --encrypt /etc/.msmtp-password
 	rm /etc/.msmtp-password

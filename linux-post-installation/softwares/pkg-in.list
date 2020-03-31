@@ -6,10 +6,10 @@ mailutils
 msmtp
 msmtp-mta
 #-- SECURITE --#
-ufw
-fail2ban
-logwatch
-certbot
+#ufw
+#fail2ban
+#logwatch
+#certbot
 #apticron
 #-- Containers --#
-docker-ce
+#docker-ce
