@@ -112,16 +112,16 @@ read choice
 				if [[ $(id -u) != 0 ]]; then
 					_home="/home"
 				fi				
-				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "/home/$_user/$_dir_ssh/$_file_authorized_keys"'
-				_cmd_text="Création du fichier "/home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"
-				_cmd='chmod 700 "/home/$_user/$_dir_ssh" && chmod 600 "/home/$_user/$_dir_ssh/$_file_authorized_keys"'
+				_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
 				_cmd_text="Application des droits sur "/home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"								
 			fi
 			# Copie de la clé publique dans le fichier ~/.ssh/authorized_keys
-			_cmd='echo -e "$_public_key" >> /home/$_user/$_dir_ssh/$_file_authorized_keys'
-			_cmd_text="Copie de la clé publique dans le fichier "/home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+			_cmd='echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys'
+			_cmd_text="Copie de la clé publique dans le fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
 			
 			#-----------------------------------------------------------------------
