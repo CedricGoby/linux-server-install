@@ -79,7 +79,13 @@ _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 # Installation des logiciels pour l'installation de paquets
-_cmd="apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates curl >/dev/null 2>>"$_file_logs""
+_cmd="apt -y install software-properties-common \
+	dirmngr \
+	apt-transport-https \
+	lsb-release \
+	ca-certificates \
+	curl \
+	gpg-agent >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pour l'installation de paquets..."
 f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
@@ -316,11 +322,18 @@ if f_check_for_package "$_package"; then
 	read -p "TLS cert check (on - off) : " _tls_cert_check
 	read -p "Adresse email (from) : " _email_from
 	read -p "Identifiant du compte email : " _login
-	# Soumission du mot de passe
+
+	# Soumission du mot de passe du compte email
 	f_submit_password
 
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
-	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
+	#_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
+	
+	gpg --full-generate-key
+	
+	echo "$_password" > /etc/.msmtp-password
+	gpg --encrypt /etc/.msmtp-password
+	rm /etc/.msmtp-password
 
 	# Modification du fichier /etc/msmtprc
 	_cmd="sed -i -e 's/^host/host "$_host"/' \
@@ -329,15 +342,9 @@ if f_check_for_package "$_package"; then
 	-e 's/^tls$/tls "$_tls"/' \
 	-e 's/^tls_certcheck$/tls_certcheck "$_tls_cert_check"/' \
 	-e 's/^from$/from "$_email_from"/' \
-	-e 's/^user$/user "$_login"/' \
-	-e 's/^password$/password "$_password"/' "$_file_config_msmtp""
+	-e 's/^user$//' \
+	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
-	f_cmd "$_cmd" "$_cmd_text"
-
-	# Application des droits et propriétés sur les fichiers de configuration
-	printf "\n%s\n" "Application des droits et propriétés sur les fichiers de configuration"
-	_cmd="chmod 600 "$_file_config_msmtp" && chown $_package "$_file_config_msmtp""
-	_cmd_text="Application des droits et propriétés sur le fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Test du MTA
@@ -420,7 +427,7 @@ read choice
 		[yYoO]*) read -p "Destinataire : " _dest
 			_cmd="mail -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
 			_cmd_text="Envoi du fichier de logs à "$_dest""
-			f_cmd "$_cmd" "$_cmd_text"
+			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
