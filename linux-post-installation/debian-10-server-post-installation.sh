@@ -116,7 +116,7 @@ read choice
 				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"
 				_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
-				_cmd_text="Application des droits sur "/home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+				_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"								
 			fi
 			# Copie de la clé publique dans le fichier ~/.ssh/authorized_keys
@@ -334,11 +334,28 @@ if f_check_for_package "$_package"; then
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
 	
+	# Création d'une paire de clé GPG
 	gpg --full-generate-key
 
 	echo "$_password" > /etc/.msmtp-password
 	gpg --encrypt /etc/.msmtp-password
 	rm /etc/.msmtp-password
+	
+	# Si le fichier gpg-agent.conf n'existe pas on le crée
+	if [ ! -f "$_file_gpg_conf" ]; then
+		# Chemin si l'utilisateur n'est pas root
+		if [[ $(id -u) != 0 ]]; then
+			_gpg_conf_dir="~/.gnupg"
+			else
+			_gpg_conf_dir="/root/.gnupg"
+		fi
+		_cmd='mkdir "$_gpg_conf_dir" && cp "$_src_config_gpg" "$_gpg_conf_dir/$_file_config_gpg"'
+		_cmd_text="Création du fichier "$_gpg_conf_dir/$_file_config_gpg"..."
+		f_cmd "$_cmd" "$_cmd_text"
+		_cmd='chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir/$_file_config_gpg"'
+		_cmd_text="Application des droits sur "$_gpg_conf_dir/$_file_config_gpg"..."
+		f_cmd "$_cmd" "$_cmd_text"		
+	fi
 
 	# Modification du fichier /etc/msmtprc
 	_cmd="sed -i -e 's/^host/host "$_host"/' \
@@ -347,7 +364,7 @@ if f_check_for_package "$_package"; then
 	-e 's/^tls$/tls "$_tls"/' \
 	-e 's/^tls_certcheck$/tls_certcheck "$_tls_cert_check"/' \
 	-e 's/^from$/from "$_email_from"/' \
-	-e 's/^user$//' \
+	-e 's/^user$/user "$_login"/' \
 	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
@@ -430,10 +447,16 @@ printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYo
 read choice
 	case $choice in
 		[yYoO]*) read -p "Destinataire : " _dest
+			# Mot de passe de la clé GPG
+			printf "\n%s\n" "Mot de passe de la clé GPG"
+			_cmd="gpg -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+			_cmd_text="Mot de passe de la clé GPG"
+			f_cmd "$_cmd" "$_cmd_text"						
+			# Envoi du fichier de logs par email
 			_cmd="mail -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
 			_cmd_text="Envoi du fichier de logs à "$_dest""
 			f_cmd "$_cmd" "$_cmd_text";;
-		[nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
+		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
 

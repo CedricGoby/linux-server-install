@@ -45,6 +45,9 @@ _file_authorized_keys="authorized_keys"
 _src_msmtp="templates/msmtprc.src"
 _file_config_msmtp="/etc/msmtprc"
 _file_passwd_msmtp="/etc/.msmtp-password.gpg"
+## gpg-agent
+_file_config_gpg="gpg-agent.conf"
+_src_config_gpg="gpg-agent.conf.src"
 ## fail2ban
 # Fichier source de configuration pour fail2ban
 _src_config_fail2ban="/etc/fail2ban/jail.conf"
