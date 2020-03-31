@@ -327,7 +327,7 @@ if f_check_for_package "$_package"; then
 	f_submit_password
 
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
-	#_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
+	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	
 	gpg --full-generate-key
 
