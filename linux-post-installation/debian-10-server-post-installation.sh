@@ -79,7 +79,7 @@ _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 # Installation des logiciels pour l'installation de paquets
-_cmd="apt -y install software-properties-common \
+_cmd="apt-get -y install software-properties-common \
 	dirmngr \
 	apt-transport-https \
 	lsb-release \
@@ -349,7 +349,7 @@ if f_check_for_package "$_package"; then
 			else
 			_gpg_conf_dir="/root/.gnupg"
 		fi
-		_cmd='mkdir "$_gpg_conf_dir" && cp "$_src_config_gpg" "$_gpg_conf_dir/$_file_config_gpg"'
+		_cmd='cp "$_src_config_gpg" "$_gpg_conf_dir/$_file_config_gpg"'
 		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
 		_cmd='chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir/$_file_config_gpg"'
@@ -453,7 +453,7 @@ read choice
 			_cmd_text="Mot de passe de la clé GPG"
 			f_cmd "$_cmd" "$_cmd_text"						
 			# Envoi du fichier de logs par email
-			_cmd="mail -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
+			_cmd="mail -v -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
 			_cmd_text="Envoi du fichier de logs à "$_dest""
 			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
