@@ -108,7 +108,11 @@ read choice
 			read -p "Clé publique : " _public_key
 			# Si le dossier .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
-				_cmd='mkdir "/home/$_user/$_dir_ssh" && touch "/home/$_user/$_dir_ssh/$_file_authorized_keys"'
+				# Chemin si l'utilisateur n'est pas root
+				if [[ $(id -u) != 0 ]]; then
+					_home="/home"
+				fi				
+				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "/home/$_user/$_dir_ssh/$_file_authorized_keys"'
 				_cmd_text="Création du fichier "/home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"
 				_cmd='chmod 700 "/home/$_user/$_dir_ssh" && chmod 600 "/home/$_user/$_dir_ssh/$_file_authorized_keys"'
