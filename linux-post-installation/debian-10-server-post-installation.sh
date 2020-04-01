@@ -446,7 +446,8 @@ printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYo
 
 read choice
 	case $choice in
-		[yYoO]*) read -p "Destinataire : " _dest
+		[yYoO]*) read -p "Destinataire : " _mailto
+			read -p "Expéditeur : " _mailfrom
 			# Mot de passe de la clé GPG
 			printf "\n%s\n" "Mot de passe de la clé GPG"
 			_cmd="gpg -d "$_file_passwd_msmtp""
@@ -455,7 +456,7 @@ read choice
 			# Envoi du fichier de logs par email
 			msmtp -d -a default -t <<END
 From: "$_mailfrom"
-To: "$_dest"
+To: "$_mailto"
 Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) - Logs post installation
 $(cat "$_file_logs")
