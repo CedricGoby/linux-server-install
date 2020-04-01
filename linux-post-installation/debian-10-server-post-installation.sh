@@ -455,8 +455,8 @@ read choice
 			f_cmd "$_cmd" "$_cmd_text"						
 			# Envoi du fichier de logs par email
 			msmtp -d -a default -t <<END
-From: "$_mailfrom"
-To: "$_mailto"
+From: $_mailfrom
+To: $_mailto
 Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) - Logs post installation
 $(cat "$_file_logs")
