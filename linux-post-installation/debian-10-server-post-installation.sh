@@ -446,13 +446,15 @@ printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYo
 
 read choice
 	case $choice in
-		[yYoO]*) printf "\n%s\n" "Mot de passe de la clé GPG" # Mot de passe de la clé GPG
+		[yYoO]*)
+			# Mot de passe de la clé GPG
+			printf "\n%s\n" "Mot de passe de la clé GPG"
 			_cmd="gpg -d "$_file_passwd_msmtp""
 			_cmd_text="Mot de passe de la clé GPG"
+			f_cmd "$_cmd" "$_cmd_text"
+			# Envoi du fichier de logs par email			
 			read -p "Destinataire : " _mailto
-			read -p "Expéditeur : " _mailfrom
-			f_cmd "$_cmd" "$_cmd_text"						
-			# Envoi du fichier de logs par email
+			read -p "Expéditeur : " _mailfrom									
 			msmtp -d -a default -t <<END
 From: $_mailfrom
 To: $_mailto
