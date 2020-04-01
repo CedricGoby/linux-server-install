@@ -453,8 +453,15 @@ read choice
 			_cmd_text="Mot de passe de la clé GPG"
 			f_cmd "$_cmd" "$_cmd_text"						
 			# Envoi du fichier de logs par email
-			#_cmd="mail -s '$(hostname) $_subject' '$_dest' < '$_file_logs'"
-			_cmd="echo -e 'Subject: Test Mail\r\n\r\nThis is a test mail' | msmtp -d cedriic@free.fr"
+			msmtp -d -a default -t <<END
+			From: $_mailfrom
+			To: $_dest
+			Content-Type: text/plain; charset=UTF-8
+			Subject: $(hostname) - Logs post installation
+
+			$(cat "$_file_logs")
+
+END
 			_cmd_text="Envoi du fichier de logs à "$_dest""
 			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
@@ -466,4 +473,3 @@ read choice
 ########################################################################
 printf "\n%s\n%s\n" "Fin du programme de post installation!" "Vous pouvez consulter le fichier journal "$_file_logs""
 exit 0
-
