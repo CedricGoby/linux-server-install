@@ -452,9 +452,10 @@ read choice
 			_cmd="gpg -d "$_file_passwd_msmtp""
 			_cmd_text="Mot de passe de la clé GPG"
 			f_cmd "$_cmd" "$_cmd_text"
-			# Envoi du fichier de logs par email			
-			read -p "Destinataire : " _mailto
-			read -p "Expéditeur : " _mailfrom									
+			# Envoi du fichier de logs par email
+			printf "\n%s\n" "Envoi du fichier de logs par email"			
+			read -p "Destinataire des logs : " _mailto
+			read -p "Expéditeur des logs : " _mailfrom									
 			msmtp -d -a default -t <<END
 From: $_mailfrom
 To: $_mailto
@@ -462,7 +463,7 @@ Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) - Logs post installation
 $(cat "$_file_logs")
 END
-			_cmd_text="Envoi du fichier de logs à "$_dest""
+			_cmd_text="Envoi du fichier de logs à "$_mailto""
 			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
