@@ -460,7 +460,7 @@ read choice
 From: $_mailfrom
 To: $_mailto
 Content-Type: text/plain; charset=UTF-8
-Subject: $(hostname) - Logs post installation
+Subject: $(hostname) $(hostname -I) - Logs post installation
 $(cat "$_file_logs")
 END
 			_cmd_text="Envoi du fichier de logs à "$_mailto""
