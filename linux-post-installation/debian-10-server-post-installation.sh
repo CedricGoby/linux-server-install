@@ -17,6 +17,7 @@
 #
 ## Fichiers modèles :
 # templates/msmtp.src
+# templates/gpg-agent.conf.src
 #
 ## Fichiers de listes :
 # conf/gpg-keys-download.list : Clés GPG à installer
@@ -336,7 +337,9 @@ if f_check_for_package "$_package"; then
      %echo done
 EOF
 	# Génération de la paire de clés
-	gpg --batch --generate-key key_options
+	_cmd="gpg --batch --generate-key key_options"
+	_cmd_text="Génération de la paire de clés"
+	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
 	if [ ! -f "$_file_gpg_conf" ]; then
@@ -376,7 +379,7 @@ EOF
 	# Chiffrement du fichier de mot de passe pour msmtp
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe pour msmtp"
 	echo "$_password" > /etc/.msmtp-password
-	_cmd="gpg --encrypt /etc/.msmtp-password"
+	_cmd="gpg --encrypt /etc/.msmtp-password -r "$_login""
 	_cmd_text="Chiffrement du fichier de mot de passe pour msmtp"
 	f_cmd "$_cmd" "$_cmd_text"
 	rm /etc/.msmtp-password
