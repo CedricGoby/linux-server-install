@@ -338,7 +338,7 @@ if f_check_for_package "$_package"; then
 EOF
 	# Génération de la paire de clés
 	_cmd="gpg --batch --generate-key key_options"
-	_cmd_text="Génération de la paire de clés"
+	_cmd_text="Génération de la paire de clés..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
@@ -376,13 +376,24 @@ EOF
 	printf "\n%s\n" "Mot de passe pour le compte SMTP"
 	f_submit_password
 	
-	# Chiffrement du fichier de mot de passe pour msmtp
-	printf "\n%s\n" "Chiffrement du fichier de mot de passe pour msmtp"
-	echo "$_password" > /etc/.msmtp-password
-	_cmd="gpg --encrypt /etc/.msmtp-password -r "$_login""
-	_cmd_text="Chiffrement du fichier de mot de passe pour msmtp"
+	# Copie du mot de passe SMTP dans un fichier temporaire
+	printf "\n%s\n" "Copie du mot de passe SMTP dans un fichier temporaire"
+	_cmd="echo "$_password" > /etc/.msmtp-password"
+	_cmd_text="Copie du mot de passe SMTP dans un fichier temporaire..."
 	f_cmd "$_cmd" "$_cmd_text"
-	rm /etc/.msmtp-password
+	
+	# Chiffrement du fichier de mot de passe SMTP
+	# GPG needs to know who is going to be opening the file and who sent it. Since this file is for you,
+	# there's no need to specify a sender, and you are the recipient.
+	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
+	_cmd="gpg -e -r "$_login" /etc/.msmtp-password"
+	_cmd_text="Chiffrement du fichier de mot de passe SMTP..."
+	f_cmd "$_cmd" "$_cmd_text"
+	
+	# Suppression du fichier temporaire contenant le mot de passe SMTP
+	_cmd="rm /etc/.msmtp-password"
+	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
+	f_cmd "$_cmd" "$_cmd_text"	
 	
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
@@ -403,7 +414,7 @@ EOF
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
 	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
-	_cmd_text="Test du MTA"
+	_cmd_text="Test du MTA $_package..."
 	f_cmd "$_cmd" "$_cmd_text"	
 fi
 
@@ -481,7 +492,7 @@ read choice
 			# Mot de passe de la clé GPG
 			printf "\n%s\n" "Mot de passe de la clé GPG"
 			_cmd="gpg -d "$_file_passwd_msmtp""
-			_cmd_text="Mot de passe de la clé GPG"
+			_cmd_text="Mot de passe de la clé GPG..."
 			f_cmd "$_cmd" "$_cmd_text"
 			# Envoi du fichier de logs par email
 			printf "\n%s\n" "Envoi du fichier de logs par email"			
@@ -494,7 +505,7 @@ Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) $(hostname -I) - Logs post installation
 $(cat "$_file_logs")
 EOF
-			_cmd_text="Envoi du fichier de logs à "$_mailto""
+			_cmd_text="Envoi du fichier de logs à "$_mailto"..."
 			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
