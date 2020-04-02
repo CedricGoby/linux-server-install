@@ -313,34 +313,31 @@ fi
 _package="msmtp"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	# Copie du fichier de configuration pour msmtp
-	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
-	_cmd_text="Copie du fichier de configuration pour msmtp..."
-	f_cmd "$_cmd" "$_cmd_text"
-	printf "\n%s\n" "Configuration de $_package"
-	# Prompt utilisateur
-	read -p "Serveur SMTP : " _host
-	read -p "Port SMTP : " _port
-	read -p "Authentification (on - off) : " _authentication
-	read -p "TLS (on - off) : " _tls
-	read -p "TLS cert check (on - off) : " _tls_cert_check
-	read -p "Adresse email (from) : " _email_from
-	read -p "Identifiant du compte email : " _login
 
-	# Soumission du mot de passe du compte email
-	f_submit_password
+# Création de la paire de clés
+	# Définition du nom et du mot de passe pour la clé
+	printf "\n%s\n" "Création d'une paire de clé GPG"
+	read -p "Email (sera également utilisé comme Real Name) : " _email_from
+	f_submit_password	
+	# Options pour la création de la paire de clés
+	cat >key_options <<EOF
+     %echo Generating an OpenPGP key
+     Key-Type: RSA
+     Key-Length: 3072
+     Subkey-Type: RSA
+     Subkey-Length: 3072
+     Name-Real: $_email_from
+     Name-Comment: No comment
+     Name-Email: $_email_from
+     Expire-Date: 0
+     Passphrase: $_password
+     # Do a commit here, so that we can later print "done" :-)
+     %commit
+     %echo done
+EOF
+	# Génération de la paire de clés
+	gpg --batch --generate-key key_options
 
-	# Insertion d'antislash devant les caractères ayant une signification pour sed
-	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
-	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
-	
-	# Création d'une paire de clé GPG
-	gpg --full-generate-key
-
-	echo "$_password" > /etc/.msmtp-password
-	gpg --encrypt /etc/.msmtp-password
-	rm /etc/.msmtp-password
-	
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
 	if [ ! -f "$_file_gpg_conf" ]; then
 		# Chemin si l'utilisateur n'est pas root
@@ -356,6 +353,37 @@ if f_check_for_package "$_package"; then
 		_cmd_text="Application des droits sur "$_gpg_conf_dir/$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
+
+# Configuration ssmtp
+	# Copie du fichier de configuration pour msmtp
+	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
+	_cmd_text="Copie du fichier de configuration pour msmtp..."
+	f_cmd "$_cmd" "$_cmd_text"
+	printf "\n%s\n" "Configuration de $_package"
+	# Variables de configuration ssmtp
+	read -p "Serveur SMTP : " _host
+	read -p "Port SMTP : " _port
+	read -p "Authentification (on - off) : " _authentication
+	read -p "TLS (on - off) : " _tls
+	read -p "TLS cert check (on - off) : " _tls_cert_check
+	read -p "Adresse email (from) : " _email_from
+	read -p "Utilisateur SMTP : " _login
+
+	# Soumission du mot de passe du compte email
+	printf "\n%s\n" "Mot de passe pour le compte SMTP"
+	f_submit_password
+	
+	# Chiffrement du fichier de mot de passe pour msmtp
+	printf "\n%s\n" "Chiffrement du fichier de mot de passe pour msmtp"
+	echo "$_password" > /etc/.msmtp-password
+	_cmd="gpg --encrypt /etc/.msmtp-password"
+	_cmd_text="Chiffrement du fichier de mot de passe pour msmtp"
+	f_cmd "$_cmd" "$_cmd_text"
+	rm /etc/.msmtp-password
+	
+	# Insertion d'antislash devant les caractères ayant une signification pour sed
+	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
+	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
 
 	# Modification du fichier /etc/msmtprc
 	_cmd="sed -i -e 's/^host/host "$_host"/' \
@@ -456,13 +484,13 @@ read choice
 			printf "\n%s\n" "Envoi du fichier de logs par email"			
 			read -p "Destinataire des logs : " _mailto
 			read -p "Expéditeur des logs : " _mailfrom									
-			msmtp -d -a default -t <<END
+			msmtp -d -a default -t <<EOF
 From: $_mailfrom
 To: $_mailto
 Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) $(hostname -I) - Logs post installation
 $(cat "$_file_logs")
-END
+EOF
 			_cmd_text="Envoi du fichier de logs à "$_mailto""
 			f_cmd "$_cmd" "$_cmd_text";;
 		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
