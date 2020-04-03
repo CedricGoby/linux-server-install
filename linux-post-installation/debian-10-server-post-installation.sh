@@ -338,7 +338,7 @@ if f_check_for_package "$_package"; then
 EOF
 	# Génération de la paire de clés
 	_cmd="gpg --batch --generate-key key_options"
-	_cmd_text="Génération de la paire de clés..."
+	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
@@ -498,7 +498,7 @@ read choice
 			printf "\n%s\n" "Envoi du fichier de logs par email"			
 			read -p "Destinataire des logs : " _mailto
 			read -p "Expéditeur des logs : " _mailfrom									
-			msmtp -d -a default -t <<EOF
+			msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
 From: $_mailfrom
 To: $_mailto
 Content-Type: text/plain; charset=UTF-8
