@@ -430,7 +430,7 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Création du fichier de configuration fail2ban "$_file_config_fail2ban"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	# Activation de la prison SSH (SSH est installé par défaut sur l'OS)
+	# Activation de la prison SSH
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
 	_cmd_text="Activation de la prison SSH fail2ban..."
 	f_cmd "$_cmd" "$_cmd_text"
