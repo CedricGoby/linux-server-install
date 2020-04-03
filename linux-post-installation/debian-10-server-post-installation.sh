@@ -315,7 +315,7 @@ _package="msmtp"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
 
-# Création de la paire de clés
+# Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "Création d'une paire de clé GPG"
 	read -p "Email (sera également utilisé comme Real Name) : " _email_from
