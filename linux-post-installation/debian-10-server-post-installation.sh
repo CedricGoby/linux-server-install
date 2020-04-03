@@ -49,7 +49,7 @@ fi
 #-----------------------------------------------------------------------
 # Tests de compatibilité du script
 #-----------------------------------------------------------------------
-# Test de compatibilité du script avec l'OS cible (Ubuntu 18.04 bionic)
+# Test de compatibilité du script avec l'OS cible
 if [[ "$_os_current" != "$_os_target" ]]; then
 	printf "\n%s\n%s\n" "[ ERREUR ] --> Le script de post-installation n'est pas compatible avec votre système." "Le script de post-installation est uniquement compatible avec "$_os_target". Arrêt du script !"
 	exit 0
@@ -79,7 +79,7 @@ _cmd="apt-get -y upgrade >/dev/null 2>>"$_file_logs""
 _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
-# Installation des logiciels pour l'installation de paquets
+# Installation des logiciels pré-requis
 _cmd="apt-get -y install software-properties-common \
 	dirmngr \
 	apt-transport-https \
@@ -87,7 +87,7 @@ _cmd="apt-get -y install software-properties-common \
 	ca-certificates \
 	curl \
 	gpg-agent >/dev/null 2>>"$_file_logs""
-_cmd_text="Installation des logiciels pour l'installation de paquets..."
+_cmd_text="Installation des logiciels pré-requis..."
 f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # SÉCURITÉ
@@ -349,20 +349,20 @@ EOF
 			else
 			_gpg_conf_dir="/root/.gnupg"
 		fi
-		_cmd='cp "$_src_config_gpg" "$_gpg_conf_dir/$_file_config_gpg"'
+		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
 		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
-		_cmd='chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir/$_file_config_gpg"'
-		_cmd_text="Application des droits sur "$_gpg_conf_dir/$_file_config_gpg"..."
+		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
+		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 
 # Configuration ssmtp
-	# Copie du fichier de configuration pour msmtp
+	# Copie du fichier de configuration global pour msmtp
 	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
-	_cmd_text="Copie du fichier de configuration pour msmtp..."
+	_cmd_text="Copie du fichier de configuration globale pour "$_package" (SMTP)..."
 	f_cmd "$_cmd" "$_cmd_text"
-	printf "\n%s\n" "Configuration de $_package"
+	printf "\n%s\n" "Configuration de "$_package""
 	# Variables de configuration ssmtp
 	read -p "Serveur SMTP : " _host
 	read -p "Port SMTP : " _port
@@ -370,10 +370,10 @@ EOF
 	read -p "TLS (on - off) : " _tls
 	read -p "TLS cert check (on - off) : " _tls_cert_check
 	read -p "Adresse email (from) : " _email_from
-	read -p "Utilisateur SMTP : " _login
+	read -p "Utilisateur : " _login
 
-	# Soumission du mot de passe du compte email
-	printf "\n%s\n" "Mot de passe pour le compte SMTP"
+	# Soumission du mot de passe SMTP
+	printf "\n%s\n" "Mot de passe pour le compte SMTP "$_login""
 	f_submit_password
 	
 	# Copie du mot de passe SMTP dans un fichier temporaire
@@ -491,7 +491,7 @@ read choice
 		[yYoO]*)
 			# Mot de passe de la clé GPG
 			printf "\n%s\n" "Mot de passe de la clé GPG"
-			_cmd="gpg -d "$_file_passwd_msmtp""
+			_cmd="gpg -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
 			_cmd_text="Mot de passe de la clé GPG..."
 			f_cmd "$_cmd" "$_cmd_text"
 			# Envoi du fichier de logs par email
