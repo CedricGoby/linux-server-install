@@ -3,7 +3,7 @@
 #------------------------------------------
 ### LOGS
 # Fichier de logs
-_file_logs="logs/$(lsb_release -cs)-post-install.log"
+_file_logs="log/$(lsb_release -cs)-post-install.log"
 
 ### COMPATIBILITÉ
 # OS compatible avec le script
