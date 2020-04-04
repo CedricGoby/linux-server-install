@@ -80,9 +80,15 @@ _cmd_text="Installation d'apache..."
 f_cmd "$_cmd" "$_cmd_text"
 
 # Activation du module SSL
-_cmd="a2enmod ssl >/dev/null 2>>"$_file_logs""
+_cmd="a2enmod ssl xml2enc proxy >/dev/null 2>>"$_file_logs""
 _cmd_text="Activation du module SSL..."
 f_cmd "$_cmd" "$_cmd_text"
+
+# Redémarrage d'apache
+_cmd="systemctl restart apache2 >/dev/null 2>>"$_file_logs""
+_cmd_text="Redémarrage d'apache..."
+f_cmd "$_cmd" "$_cmd_text"
+
 ########################################################################
 # SÉCURITÉ
 ########################################################################
