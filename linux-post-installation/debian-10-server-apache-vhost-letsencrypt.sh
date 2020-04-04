@@ -1,8 +1,7 @@
 #!/usr/bin/env bash
 
-# Description : Opérations post installation pour Debian 10 server (buster).
-# Installation et/ou paramétrage de logiciels.
-# Usage : sudo ./debian-10-server-post-install.sh
+# Description : Installation d'apache et configuration des domaines avec Let's Encrypt
+# Usage : sudo ./debian-10-server-apache-vhost-letsencrypt.sh
 # Licence : GPL-3+
 # Auteur : Cédric Goby
 # Versioning : https://gitlab.com/CedricGoby/linux-server-install
@@ -15,20 +14,13 @@
 ## Définition des fonctions
 . func/source.func
 #
-## Fichiers modèles :
-# templates/msmtp.src
-# templates/gpg-agent.conf.src
-#
 ## Fichiers de listes :
-# conf/gpg-keys-download.list : Clés GPG à installer
-# conf/repository-in.list : Dépôts à ajouter
-# conf/pkg-in.list : Paquets à installer
-# conf/software-download.list : Logiciels à télécharger et installer (hors dépôts)
+# conf/domains.list : Domaines et sous domaines
 #
 ## Journaux
-_file_logs="log/$(lsb_release -cs)-post-install.log"
+_file_logs="log/$(lsb_release -cs)-apache-vhost-letsencrypt.log"
 
-printf "\n%s\n" "Script de post installation pour Debian 10 server (buster)"
+printf "\n%s\n" "Script d'installation d'apache et configuration des domaines avec Let's Encrypt pour Debian 10 server (buster)"
 
 ########################################################################
 # INITIALISATION & TESTS
@@ -79,9 +71,6 @@ _cmd="apt-get -y upgrade >/dev/null 2>>"$_file_logs""
 _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
-########################################################################
-# LOGICIELS PRÉ-REQUIS
-########################################################################
 # Installation des logiciels pré-requis
 _cmd="apt-get -y install software-properties-common \
 	dirmngr \
