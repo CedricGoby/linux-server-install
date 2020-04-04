@@ -200,7 +200,7 @@ while IFS=$'\t' read _name _repository _type; do
 		else
 		_cmd="echo -e '"$_repository"' | tee /etc/apt/sources.list.d/"$_name".list"
 		fi
-	_cmd_text="Installation du dépôt "$_repository"..."
+	_cmd_text="Installation du dépôt "$_name"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
 done < "$_src_pkg_repository"
