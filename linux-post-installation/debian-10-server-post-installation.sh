@@ -491,7 +491,7 @@ read choice
 		[yYoO]*)
 			# Mot de passe de la clé GPG
 			printf "\n%s\n" "Mot de passe de la clé GPG"
-			_cmd="gpg -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+			_cmd="gpg -q -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
 			_cmd_text="Mot de passe de la clé GPG..."
 			f_cmd "$_cmd" "$_cmd_text"
 			# Envoi du fichier de logs par email
