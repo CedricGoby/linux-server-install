@@ -13,10 +13,6 @@
 . var/source.var
 ## Définition des fonctions
 . func/source.func
-#
-## Fichiers de listes :
-# conf/domains.list : Domaines et sous domaines
-#
 ## Journaux
 _file_logs="log/$(lsb_release -cs)-apache-vhost-letsencrypt.log"
 
@@ -74,12 +70,10 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # INSTALLATION D'APACHE
 ########################################################################
-# Installation d'apache
-_cmd="apt-get -y install apache2 >/dev/null 2>>"$_file_logs""
-_cmd_text="Installation d'apache..."
-f_cmd "$_cmd" "$_cmd_text"
+_package="apache2"
+f_install_package "$_package"
 
-# Activation du module SSL
+# Activation de modules
 _cmd="a2enmod ssl xml2enc proxy >/dev/null 2>>"$_file_logs""
 _cmd_text="Activation du module SSL..."
 f_cmd "$_cmd" "$_cmd_text"
@@ -90,8 +84,60 @@ _cmd_text="Redémarrage d'apache..."
 f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
-# SÉCURITÉ
+# CRÉATION DU CERTIFICAT SSL
 ########################################################################
+# certbot est installé si il n'est pas présent
+_package="certbot"
+f_install_package "$_package"
+
+SERVICE="apache2"
+if systemctl is-active --quiet "$SERVICE"
+then
+	# Arrêt d'apache
+	_cmd="systemctl stop "$SERVICE" >/dev/null 2>>"$_file_logs""
+	_cmd_text="Redémarrage de "$SERVICE"..."
+	f_cmd "$_cmd" "$_cmd_text"
+fi
+
+# Création du certificat SSL (Wildcard)
+printf "\n%s\n" "Création du certificat SSL (Wildcard)"
+read -p "Domaine du certificat SSL : " _domain
+read -p "Email attaché au certificat SSL : " _email_letsencrypt
+certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" > "$_file_logs"
+
+########################################################################
+# RAPPORT
+########################################################################
+# Envoi du fichier de logs 
+printf "\n%s" "Souhaitez-vous envoyer le rapport par email ? (yYoO / nN)"
+
+read choice
+	case $choice in
+		[yYoO]*)
+			# Envoi du fichier de logs par email
+			printf "\n%s\n" "Envoi du fichier de logs par email"			
+			read -p "Destinataire des logs : " _mailto
+			read -p "Expéditeur des logs : " _mailfrom									
+			msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
+From: $_mailfrom
+To: $_mailto
+Content-Type: text/plain; charset=UTF-8
+Subject: $(hostname) $(hostname -I) - Logs apache, certbot
+$(cat "$_file_logs")
+EOF
+			_cmd_text="Envoi du fichier de logs à "$_mailto"..."
+			f_cmd "$_cmd" "$_cmd_text";;
+		[nN]*) printf "%s\n" "Suite du programme...";;
+		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
+	esac
+
+########################################################################
+# FIN DE PROGRAMME
+########################################################################
+printf "\n%s\n%s\n" "Fin du programme !" "Vous pouvez consulter le fichier journal "$_file_logs""
+exit 0
+
+
 
 #-----------------------------------------------------------------------
 # Paramétrage openSSH
@@ -480,39 +526,3 @@ _cmd='echo -e "$_crontab_job" >> $_file_crontab'
 _cmd_text="Planification de la mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
-########################################################################
-# RAPPORT
-########################################################################
-# Envoi du fichier de logs 
-printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"
-
-read choice
-	case $choice in
-		[yYoO]*)
-			# Mot de passe de la clé GPG
-			printf "\n%s\n" "Mot de passe de la clé GPG"
-			_cmd="gpg -q -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-			_cmd_text="Mot de passe de la clé GPG..."
-			f_cmd "$_cmd" "$_cmd_text"
-			# Envoi du fichier de logs par email
-			printf "\n%s\n" "Envoi du fichier de logs par email"			
-			read -p "Destinataire des logs : " _mailto
-			read -p "Expéditeur des logs : " _mailfrom									
-			msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
-From: $_mailfrom
-To: $_mailto
-Content-Type: text/plain; charset=UTF-8
-Subject: $(hostname) $(hostname -I) - Logs post installation
-$(cat "$_file_logs")
-EOF
-			_cmd_text="Envoi du fichier de logs à "$_mailto"..."
-			f_cmd "$_cmd" "$_cmd_text";;
-		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
-		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
-	esac
-
-########################################################################
-# FIN DE PROGRAMME
-########################################################################
-printf "\n%s\n%s\n" "Fin du programme de post installation!" "Vous pouvez consulter le fichier journal "$_file_logs""
-exit 0
