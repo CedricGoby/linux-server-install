@@ -71,15 +71,17 @@ _cmd="apt-get -y upgrade >/dev/null 2>>"$_file_logs""
 _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
-# Installation des logiciels pré-requis
-_cmd="apt-get -y install software-properties-common \
-	dirmngr \
-	apt-transport-https \
-	lsb-release \
-	ca-certificates \
-	curl \
-	gpg-agent >/dev/null 2>>"$_file_logs""
-_cmd_text="Installation des logiciels pré-requis..."
+########################################################################
+# INSTALLATION D'APACHE
+########################################################################
+# Installation d'apache
+_cmd="apt-get -y install apache2 >/dev/null 2>>"$_file_logs""
+_cmd_text="Installation d'apache..."
+f_cmd "$_cmd" "$_cmd_text"
+
+# Activation du module SSL
+_cmd="a2enmod ssl >/dev/null 2>>"$_file_logs""
+_cmd_text="Activation du module SSL..."
 f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # SÉCURITÉ
