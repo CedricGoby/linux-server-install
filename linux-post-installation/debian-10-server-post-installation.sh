@@ -476,7 +476,7 @@ read choice
 			printf "\n%s\n" "Création du certificat SSL (Wildcard)"
 			read -p "Domaine du certificat SSL : " _domain
 			read -p "Email attaché au certificat SSL : " _email_letsencrypt
-			certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" > "$_file_logs"
+			certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" >> "$_file_logs"
 
 			# Redémarrage d'apache si il tournait
 			if [[ $_status = 1 ]] ; then
