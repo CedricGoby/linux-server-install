@@ -118,19 +118,21 @@ read choice
 				fi				
 				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
 				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
-				f_cmd "$_cmd" "$_cmd_text"
-				_cmd='chown -R "$_user" "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
-				_cmd_text="Propriété du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
-				f_cmd "$_cmd" "$_cmd_text"
-				_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
-				_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"								
 			fi
 			# Copie de la clé publique dans le fichier ~/.ssh/authorized_keys
 			_cmd='echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys'
 			_cmd_text="Copie de la clé publique dans le fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
-			
+
+			# Aplication des propriétés et des droits
+			_cmd='chown -R "$_user" "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+			_cmd_text="Propriété du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+			f_cmd "$_cmd" "$_cmd_text"
+			_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+			f_cmd "$_cmd" "$_cmd_text"
+						
 			#-----------------------------------------------------------------------
 			# Interdire l'authentification par mot de passe
 			#-----------------------------------------------------------------------
@@ -473,11 +475,12 @@ read choice
 			fi
 
 			# Création du certificat SSL (Wildcard)
-			printf "\n%s\n" "Création du certificat SSL (Wildcard)"
+			printf "\n%s\n" "Création du certificat SSL Let's Encrypt (Wildcard)"
 			read -p "Domaine du certificat SSL : " _domain
 			read -p "Email attaché au certificat SSL : " _email_letsencrypt
-			certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" >> "$_file_logs"
-
+			_cmd="certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" >> "$_file_logs""
+			_cmd_text="Création du certificat SSL Let's Encrypt (Wildcard) pour "$_domain"..."
+			f_cmd "$_cmd" "$_cmd_text"			
 			# Redémarrage d'apache si il tournait
 			if [[ $_status = 1 ]] ; then
 				# Démarrage d'apache
