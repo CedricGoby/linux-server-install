@@ -119,6 +119,9 @@ read choice
 				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
 				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"
+				_cmd='chown -R "$_user" "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+				_cmd_text="Propriété du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+				f_cmd "$_cmd" "$_cmd_text"
 				_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
 				_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 				f_cmd "$_cmd" "$_cmd_text"								
