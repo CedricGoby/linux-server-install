@@ -113,7 +113,7 @@ read choice
 			# Si le dossier .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
-				if [[ $(id -u) != 0 ]]; then
+				if [[ $_user != root ]]; then
 					_home="/home"
 				fi				
 				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
