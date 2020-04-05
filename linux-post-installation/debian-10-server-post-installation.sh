@@ -421,6 +421,71 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"	
 fi
 
+########################################################################
+# INSTALLATION D'APACHE (reverse proxy)
+########################################################################
+
+printf "\n%s" "Souhaitez-vous installer apache comme reverse proxy ? (yYoO / nN)"
+
+read choice
+	case $choice in
+		[yYoO]*) 
+			_package="apache2"
+			f_install_package "$_package"
+
+			# Activation de modules
+			_cmd="a2enmod ssl xml2enc proxy >/dev/null 2>>"$_file_logs""
+			_cmd_text="Activation du module SSL..."
+			f_cmd "$_cmd" "$_cmd_text"
+
+			# Redémarrage d'apache
+			_cmd="systemctl restart apache2 >/dev/null 2>>"$_file_logs""
+			_cmd_text="Redémarrage d'apache..."
+			f_cmd "$_cmd" "$_cmd_text";;			
+		[nN]*) printf "%s\n" ""$_package" ne sera pas installé. Suite du programme...";;
+		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
+	esac
+	
+########################################################################
+# CRÉATION DU CERTIFICAT SSL
+########################################################################
+
+printf "\n%s" "Souhaitez-vous créer un certificat SSL (Wildcard) ? (yYoO / nN)"
+
+read choice
+	case $choice in
+		[yYoO]*) 
+			# certbot est installé si il n'est pas présent
+			_package="certbot"
+			f_install_package "$_package"
+
+			# Arrêt d'apache si il tourne
+			SERVICE="apache2"
+			if systemctl is-active --quiet "$SERVICE" ; then
+				# Arrêt d'apache
+				_status="1"
+				_cmd="systemctl stop "$SERVICE" >/dev/null 2>>"$_file_logs""
+				_cmd_text="Arrêt de "$SERVICE"..."
+				f_cmd "$_cmd" "$_cmd_text"
+			fi
+
+			# Création du certificat SSL (Wildcard)
+			printf "\n%s\n" "Création du certificat SSL (Wildcard)"
+			read -p "Domaine du certificat SSL : " _domain
+			read -p "Email attaché au certificat SSL : " _email_letsencrypt
+			certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" > "$_file_logs"
+
+			# Redémarrage d'apache si il tournait
+			if [[ $_status = 1 ]] ; then
+				# Démarrage d'apache
+				_cmd="systemctl start "$SERVICE" >/dev/null 2>>"$_file_logs""
+				_cmd_text="Démarrage de "$SERVICE"..."
+				f_cmd "$_cmd" "$_cmd_text"
+			fi;;			
+		[nN]*) printf "%s\n" "Pas de certificat à installer. Suite du programme...";;
+		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
+	esac
+
 #-----------------------------------------------------------------------
 # Configuration fail2ban
 #-----------------------------------------------------------------------
@@ -437,6 +502,11 @@ if f_check_for_package "$_package"; then
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
 	_cmd_text="Activation de la prison SSH fail2ban..."
 	f_cmd "$_cmd" "$_cmd_text"
+	
+	_package="apache2"
+	if f_check_for_package "$_package"; then
+	
+	fi
 	
 	# Redémarrage du service
 	_cmd="systemctl restart fail2ban"
