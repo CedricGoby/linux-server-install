@@ -439,7 +439,7 @@ fi
 # INSTALLATION D'APACHE (reverse proxy)
 ########################################################################
 
-printf "\n%s" "Souhaitez-vous installer apache comme reverse proxy ? (yYoO / nN)"
+printf "\n%s" "Souhaitez-vous installer apache comme reverse proxy SSL ? (yYoO / nN)"
 
 read choice
 	case $choice in
@@ -453,8 +453,8 @@ read choice
 			f_cmd "$_cmd" "$_cmd_text"
 
 			# Redémarrage d'apache
-			_cmd="systemctl restart apache2 >/dev/null 2>>"$_file_logs""
-			_cmd_text="Redémarrage d'apache..."
+			_cmd="systemctl restart "$_package" >/dev/null 2>>"$_file_logs""
+			_cmd_text="Redémarrage de "$_package"..."
 			f_cmd "$_cmd" "$_cmd_text";;			
 		[nN]*) printf "%s\n" ""$_package" ne sera pas installé. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
