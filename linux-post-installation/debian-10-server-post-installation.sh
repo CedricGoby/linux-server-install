@@ -149,8 +149,8 @@ read choice
 			
 			read choice
 				case $choice in
-							# On remplace la ligne suivant celle qui contient "UsePAM yes" dans le fichier /etc/ssh/sshd_config
-				  [yYoO]*) _cmd="sed -i '/UsePAM yes/!b;n;cPasswordAuthentication no' $_file_sshd_config"
+							# On remplace "#PasswordAuthentication yes" par "PasswordAuthentication no" dans le fichier /etc/ssh/sshd_config
+				  [yYoO]*) _cmd="sed -i 's/^#PasswordAuthentication yes/PasswordAuthentication no/' $_file_sshd_config"
 						_cmd_text="Désactivation de l'authentification SSH par mot de passe..."
 						f_cmd "$_cmd" "$_cmd_text";;
 				  [nN]*) printf "%s\n" "Suite du programme...";;
