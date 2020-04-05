@@ -110,26 +110,35 @@ read choice
 	case $choice in
 		[yYoO]*) read -p "Utilisateur machine distante : " _user
 			read -p "Clé publique machine locale : " _public_key
-			# Si le dossier .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
+			# Si le répertoire .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
 				if [[ $_user != root ]]; then
 					_home="/home"
-				fi				
-				_cmd='mkdir "$_home/$_user/$_dir_ssh" && touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+				fi
+				# Création du répertoire .ssh				
+				_cmd="mkdir "$_home/$_user/$_dir_ssh""
+				_cmd_text="Création du dossier "$_home/$_user/$_dir_ssh"..."
+				f_cmd "$_cmd" "$_cmd_text"
+				# Création du fichier .ssh/authorized_keys
+				_cmd="touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
 				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
-				f_cmd "$_cmd" "$_cmd_text"								
+				f_cmd "$_cmd" "$_cmd_text"						
 			fi
+			
 			# Copie de la clé publique dans le fichier ~/.ssh/authorized_keys
-			_cmd='echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys'
+			_cmd="echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys"
 			_cmd_text="Copie de la clé publique dans le fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
 
 			# Aplication des propriétés et des droits
-			_cmd='chown -R "$_user" "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
-			_cmd_text="Propriété du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+			_cmd="chown -R "$_user" "$_home/$_user/$_dir_ssh""
+			_cmd_text="Propriété du répertoire "$_home/$_user/$_dir_ssh"..."
 			f_cmd "$_cmd" "$_cmd_text"
-			_cmd='chmod 700 "$_home/$_user/$_dir_ssh" && chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys"'
+			_cmd="chmod 700 "$_home/$_user/$_dir_ssh""
+			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh"..."
+			f_cmd "$_cmd" "$_cmd_text"			
+			_cmd="chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
 						
