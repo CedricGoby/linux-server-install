@@ -108,8 +108,8 @@ printf "\n%s" "Souhaitez-vous copier une clé publique pour un utilisateur ? (yY
 
 read choice
 	case $choice in
-		[yYoO]*) read -p "Utilisateur : " _user
-			read -p "Clé publique : " _public_key
+		[yYoO]*) read -p "Utilisateur machine distante : " _user
+			read -p "Clé publique machine locale : " _public_key
 			# Si le dossier .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
@@ -506,10 +506,10 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Activation de la prison SSH fail2ban..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	_package="apache2"
-	if f_check_for_package "$_package"; then
+	#_package="apache2"
+	#if f_check_for_package "$_package"; then
 	
-	fi
+	#fi
 	
 	# Redémarrage du service
 	_cmd="systemctl restart fail2ban"
