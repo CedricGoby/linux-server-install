@@ -566,6 +566,10 @@ if f_check_for_package "$_package"; then
 	-e 's/Output = stdout/Output = mail/' "$_file_config_logwatch""
 	_cmd_text="Modification du fichier "$_file_config_logwatch"..."
 	f_cmd "$_cmd" "$_cmd_text"
+	
+	# Envoi du mail logwatch
+	_cmd="logwatch"
+	_cmd_text="Envoi du mail logwatch..."
 fi
 
 ########################################################################
