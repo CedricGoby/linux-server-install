@@ -562,7 +562,8 @@ if f_check_for_package "$_package"; then
 
 	# Modification du fichier /usr/share/logwatch/default.conf/logwatch.conf
 	_cmd="sed -i -e 's/MailTo = root/MailTo = "$_mailto"/' \
-	-e 's/MailFrom = Logwatch/MailFrom = "$_mailfrom"/' "$_file_config_logwatch""
+	-e 's/MailFrom = Logwatch/MailFrom = "$_mailfrom"/' \
+	-e 's/Output = stdout/Output = mail/' "$_file_config_logwatch""
 	_cmd_text="Modification du fichier "$_file_config_logwatch"..."
 	f_cmd "$_cmd" "$_cmd_text"
 fi
