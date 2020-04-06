@@ -518,10 +518,18 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Activation de la prison SSH "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	#_package="apache2"
-	#if f_check_for_package "$_package"; then
-	
-	#fi
+	_package="apache2"
+	if f_check_for_package "$_package"; then
+		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true' \
+		sed -e '/^\[apache-badbots\]/a enabled = true' \
+		sed -e '/^\[apache-noscript\]/a enabled = true' \
+		sed -e '/^\[apache-overflows\]/a enabled = true' \
+		sed -e '/^\[apache-nohome\]/a enabled = true' \
+		sed -e '/^\[apache-botsearch\]/a enabled = true' \
+		sed -e '/^\[apache-fakegooglebot\]/a enabled = true' \
+		sed -e '/^\[apache-modsecurity\]/a enabled = true' \
+		sed -e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""	
+	fi
 	
 	# Redémarrage du service
 	_cmd="systemctl restart "$_package""
