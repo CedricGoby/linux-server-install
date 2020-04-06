@@ -542,6 +542,10 @@ if f_check_for_package "$_package"; then
 	_cmd="systemctl restart "$_package""
 	_cmd_text="Redémarrage du service "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+	# Prisons actives
+	fail2ban-client status >>"$_file_logs"
+
 fi
 
 #-----------------------------------------------------------------------
