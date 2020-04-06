@@ -557,8 +557,8 @@ _package="logwatch"
 if f_check_for_package "$_package"; then
 	printf "\n%s\n" "Configuration de $_package"
 	# Prompt utilisateur
-	read -p "Destinataire : " _mailto
-	read -p "Expéditeur : " _mailfrom
+	read -p "Destinataire logwatch : " _mailto
+	read -p "Expéditeur logwatch : " _mailfrom
 
 	# Modification du fichier /usr/share/logwatch/default.conf/logwatch.conf
 	_cmd="sed -i -e 's/MailTo = root/MailTo = "$_mailto"/' \
