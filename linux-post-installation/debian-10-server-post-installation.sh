@@ -528,7 +528,9 @@ if f_check_for_package "$_package"; then
 		sed -e '/^\[apache-botsearch\]/a enabled = true' \
 		sed -e '/^\[apache-fakegooglebot\]/a enabled = true' \
 		sed -e '/^\[apache-modsecurity\]/a enabled = true' \
-		sed -e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""	
+		sed -e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""
+		_cmd_text="Activation de la prison SSH "$_package"..."
+		f_cmd "$_cmd" "$_cmd_text"
 	fi
 	
 	# Redémarrage du service
