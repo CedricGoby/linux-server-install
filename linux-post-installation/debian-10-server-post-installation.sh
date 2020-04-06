@@ -104,12 +104,12 @@ printf "\n%s\n" "PARAMÉTRAGE OPENSSH"
 #-----------------------------------------------------------------------
 # Copier une clé publique
 #-----------------------------------------------------------------------
-printf "\n%s" "Souhaitez-vous copier une clé publique pour un utilisateur ? (yYoO / nN)"
+printf "\n%s" "Souhaitez-vous copier une clé publique SSH ? (yYoO / nN)"
 
 read choice
 	case $choice in
 		[yYoO]*) read -p "Utilisateur machine distante : " _user
-			read -p "Clé publique machine locale : " _public_key
+			read -p "Clé publique SSH : " _public_key
 			# Si le répertoire .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
@@ -526,14 +526,14 @@ if f_check_for_package "$_package"; then
 	_package="apache2"
 	if f_check_for_package "$_package"; then
 		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true/' \
-		sed -e '/^\[apache-badbots\]/a enabled = true/' \
-		sed -e '/^\[apache-noscript\]/a enabled = true/' \
-		sed -e '/^\[apache-overflows\]/a enabled = true/' \
-		sed -e '/^\[apache-nohome\]/a enabled = true/' \
-		sed -e '/^\[apache-botsearch\]/a enabled = true/' \
-		sed -e '/^\[apache-fakegooglebot\]/a enabled = true/' \
-		sed -e '/^\[apache-modsecurity\]/a enabled = true/' \
-		sed -e '/^\[apache-shellshock\]/a enabled = true/'  "$_file_config_fail2ban""
+		-e '/^\[apache-badbots\]/a enabled = true/' \
+		-e '/^\[apache-noscript\]/a enabled = true/' \
+		-e '/^\[apache-overflows\]/a enabled = true/' \
+		-e '/^\[apache-nohome\]/a enabled = true/' \
+		-e '/^\[apache-botsearch\]/a enabled = true/' \
+		-e '/^\[apache-fakegooglebot\]/a enabled = true/' \
+		-e '/^\[apache-modsecurity\]/a enabled = true/' \
+		-e '/^\[apache-shellshock\]/a enabled = true/'  "$_file_config_fail2ban""
 		_cmd_text="Activation de la prison "$_package"..."
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
