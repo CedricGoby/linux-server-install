@@ -515,7 +515,7 @@ if f_check_for_package "$_package"; then
 	
 	# Activation de la prison SSH
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
-	_cmd_text="Activation de la prison SSH "$_package"..."
+	_cmd_text="Activation de la prison "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	_package="apache2"
@@ -529,7 +529,7 @@ if f_check_for_package "$_package"; then
 		sed -e '/^\[apache-fakegooglebot\]/a enabled = true' \
 		sed -e '/^\[apache-modsecurity\]/a enabled = true' \
 		sed -e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""
-		_cmd_text="Activation de la prison SSH "$_package"..."
+		_cmd_text="Activation de la prison "$_package"..."
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
 	
