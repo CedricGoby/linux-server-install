@@ -410,6 +410,11 @@ EOF
 	# Suppression du fichier temporaire contenant le mot de passe SMTP
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
+	f_cmd "$_cmd" "$_cmd_text"
+	
+	# Déchiffrement du mot de passe de la clé GPG
+	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+	_cmd_text="Déchiffrement du mot de passe de la clé GPG..."
 	f_cmd "$_cmd" "$_cmd_text"	
 	
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
@@ -587,11 +592,6 @@ printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYo
 read choice
 	case $choice in
 		[yYoO]*)
-			# Mot de passe de la clé GPG
-			printf "\n%s\n" "Mot de passe de la clé GPG"
-			_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-			_cmd_text="Mot de passe de la clé GPG..."
-			f_cmd "$_cmd" "$_cmd_text"
 			# Envoi du fichier de logs par email
 			printf "\n%s\n" "Envoi du fichier de logs par email"			
 			read -p "Destinataire des logs : " _mailto
