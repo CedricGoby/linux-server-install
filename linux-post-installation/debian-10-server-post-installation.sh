@@ -335,7 +335,7 @@ if f_check_for_package "$_package"; then
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "Création d'une paire de clé GPG"
-	read -p "Email (sera également utilisé comme Real Name) : " _email_from
+	read -p "Email (sera également utilisé comme Real Name) : " _email_gpg_key
 	f_submit_password	
 	# Options pour la création de la paire de clés
 	cat >key_options <<EOF
@@ -344,9 +344,9 @@ if f_check_for_package "$_package"; then
      Key-Length: 3072
      Subkey-Type: RSA
      Subkey-Length: 3072
-     Name-Real: $_email_from
+     Name-Real: $_email_gpg_key
      Name-Comment: No comment
-     Name-Email: $_email_from
+     Name-Email: $_email_gpg_key
      Expire-Date: 0
      Passphrase: $_password
      # Do a commit here, so that we can later print "done" :-)
@@ -449,7 +449,7 @@ read choice
 
 			# Activation de modules
 			_cmd="a2enmod ssl xml2enc proxy >/dev/null 2>>"$_file_logs""
-			_cmd_text="Activation du module SSL..."
+			_cmd_text="Activation de modules "$_package"..."
 			f_cmd "$_cmd" "$_cmd_text"
 
 			# Redémarrage d'apache
@@ -474,12 +474,12 @@ read choice
 			f_install_package "$_package"
 
 			# Arrêt d'apache si il tourne
-			SERVICE="apache2"
-			if systemctl is-active --quiet "$SERVICE" ; then
+			_service="apache2"
+			if systemctl is-active --quiet "$_service" ; then
 				# Arrêt d'apache
 				_status="1"
-				_cmd="systemctl stop "$SERVICE" >/dev/null 2>>"$_file_logs""
-				_cmd_text="Arrêt de "$SERVICE"..."
+				_cmd="systemctl stop "$_service" >/dev/null 2>>"$_file_logs""
+				_cmd_text="Arrêt de "$_service"..."
 				f_cmd "$_cmd" "$_cmd_text"
 			fi
 
@@ -493,8 +493,8 @@ read choice
 			# Redémarrage d'apache si il tournait
 			if [[ $_status = 1 ]] ; then
 				# Démarrage d'apache
-				_cmd="systemctl start "$SERVICE" >/dev/null 2>>"$_file_logs""
-				_cmd_text="Démarrage de "$SERVICE"..."
+				_cmd="systemctl start "$_service" >/dev/null 2>>"$_file_logs""
+				_cmd_text="Démarrage de "$_service"..."
 				f_cmd "$_cmd" "$_cmd_text"
 			fi;;			
 		[nN]*) printf "%s\n" "Pas de certificat à installer. Suite du programme...";;
@@ -510,12 +510,12 @@ _package="fail2ban"
 if f_check_for_package "$_package"; then
 	# Création du fichier de configuration
 	_cmd="cp "$_src_config_fail2ban" "$_file_config_fail2ban""
-	_cmd_text="Création du fichier de configuration fail2ban "$_file_config_fail2ban"..."
+	_cmd_text="Création du fichier de configuration "$_package" "$_file_config_fail2ban"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Activation de la prison SSH
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
-	_cmd_text="Activation de la prison SSH fail2ban..."
+	_cmd_text="Activation de la prison SSH "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	#_package="apache2"
@@ -524,8 +524,8 @@ if f_check_for_package "$_package"; then
 	#fi
 	
 	# Redémarrage du service
-	_cmd="systemctl restart fail2ban"
-	_cmd_text="Redémarrage du service fail2ban..."
+	_cmd="systemctl restart "$_package""
+	_cmd_text="Redémarrage du service "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 fi
 
@@ -579,7 +579,7 @@ read choice
 		[yYoO]*)
 			# Mot de passe de la clé GPG
 			printf "\n%s\n" "Mot de passe de la clé GPG"
-			_cmd="gpg -q -d "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+			_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
 			_cmd_text="Mot de passe de la clé GPG..."
 			f_cmd "$_cmd" "$_cmd_text"
 			# Envoi du fichier de logs par email
