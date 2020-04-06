@@ -412,9 +412,9 @@ EOF
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	# Déchiffrement du mot de passe de la clé GPG
+	# Déchiffrement du mot de passe de la clé GPG pour la session
 	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-	_cmd_text="Déchiffrement du mot de passe de la clé GPG..."
+	_cmd_text="Déchiffrement du mot de passe de la clé GPG pour la session..."
 	f_cmd "$_cmd" "$_cmd_text"	
 	
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
