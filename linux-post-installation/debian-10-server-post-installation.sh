@@ -525,15 +525,15 @@ if f_check_for_package "$_package"; then
 	
 	_package="apache2"
 	if f_check_for_package "$_package"; then
-		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true/' \
-		-e '/^\[apache-badbots\]/a enabled = true/' \
-		-e '/^\[apache-noscript\]/a enabled = true/' \
-		-e '/^\[apache-overflows\]/a enabled = true/' \
-		-e '/^\[apache-nohome\]/a enabled = true/' \
-		-e '/^\[apache-botsearch\]/a enabled = true/' \
-		-e '/^\[apache-fakegooglebot\]/a enabled = true/' \
-		-e '/^\[apache-modsecurity\]/a enabled = true/' \
-		-e '/^\[apache-shellshock\]/a enabled = true/'  "$_file_config_fail2ban""
+		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true' \
+		-e '/^\[apache-badbots\]/a enabled = true' \
+		-e '/^\[apache-noscript\]/a enabled = true' \
+		-e '/^\[apache-overflows\]/a enabled = true' \
+		-e '/^\[apache-nohome\]/a enabled = true' \
+		-e '/^\[apache-botsearch\]/a enabled = true' \
+		-e '/^\[apache-fakegooglebot\]/a enabled = true' \
+		-e '/^\[apache-modsecurity\]/a enabled = true' \
+		-e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""
 		_cmd_text="Activation de la prison "$_package"..."
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
