@@ -376,8 +376,8 @@ EOF
 	fi
 	
 	# Démarrage de l'agent GPG
-	gpg-agent --daemon >/dev/null 2>>"$_file_logs"
-	export GPG_TTY=$(tty)
+	#gpg-agent --daemon >/dev/null 2>>"$_file_logs"
+	#export GPG_TTY=$(tty)
 	
 	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
@@ -385,9 +385,7 @@ eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY=$(tty)
 EOF
-	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
-	gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
-	#echo | gpg -s >/dev/null
+
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
@@ -426,7 +424,11 @@ EOF
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
+	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
+	gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
+	#echo | gpg -s >/dev/null	
+
 	# Déchiffrement du mot de passe de la clé GPG pour la session
 	#_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
 	#_cmd_text="Déchiffrement du mot de passe de la clé GPG pour la session..."
