@@ -89,7 +89,6 @@ _cmd="apt-get -y install software-properties-common \
 	lsb-release \
 	ca-certificates \
 	curl \
-	keychain \
 	gnupg >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pré-requis..."
 f_cmd "$_cmd" "$_cmd_text"
@@ -428,16 +427,6 @@ EOF
 	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
 	gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
 	#echo | gpg -s >/dev/null	
-
-	# Déchiffrement du mot de passe de la clé GPG pour la session
-	#_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-	#_cmd_text="Déchiffrement du mot de passe de la clé GPG pour la session..."
-	#f_cmd "$_cmd" "$_cmd_text"
-	
-	## Ajout de la clé GPG dans keychain
-	#_cmd="keychain --eval --agents gpg $(gpg -k | awk 'NR==4' | tr -d ' ')"
-	#_cmd_text="Ajout de la clé GPG dans keychain..."
-	#f_cmd "$_cmd" "$_cmd_text"	
 	
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
