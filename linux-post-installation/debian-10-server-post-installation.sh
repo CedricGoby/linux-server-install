@@ -590,8 +590,9 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Envoi du mail logwatch
-	_cmd="logwatch"
+	_cmd="logwatch --detail 5"
 	_cmd_text="Envoi du mail logwatch..."
+	f_cmd "$_cmd" "$_cmd_text"
 fi
 
 ########################################################################
