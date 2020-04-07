@@ -386,6 +386,8 @@ eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY
 EOF
+	# (Cette opération enregistre le mot de passe avec l'agent GPG)	
+	gpg -s  >/dev/null
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
@@ -413,7 +415,6 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Chiffrement du fichier de mot de passe SMTP
-	# (Cette opération enregistre le mot de passe avec l'agent GPG)
 	# GPG needs to know who is going to be opening the file and who sent it. Since this file is for you,
 	# there's no need to specify a sender, and you are the recipient.
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
@@ -623,7 +624,8 @@ read choice
 			# Envoi du fichier de logs par email
 			printf "\n%s\n" "Envoi du fichier de logs par email"			
 			read -p "Destinataire des logs : " _mailto
-			read -p "Expéditeur des logs : " _mailfrom									
+			read -p "Expéditeur des logs : " _mailfrom	
+								
 			msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
 From: $_mailfrom
 To: $_mailto
