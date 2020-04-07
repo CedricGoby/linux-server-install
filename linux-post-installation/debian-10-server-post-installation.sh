@@ -386,7 +386,6 @@ eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY
 EOF
-	
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
