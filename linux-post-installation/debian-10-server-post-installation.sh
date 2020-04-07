@@ -377,8 +377,7 @@ EOF
 	
 	# Démarrage de l'agent GPG
 	eval $(gpg-agent --daemon)
-	#GPG_TTY=$(tty)
-	#export GPG_TTY
+	export GPG_TTY=$(tty)
 	
 	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
@@ -387,7 +386,8 @@ GPG_TTY=$(tty)
 export GPG_TTY
 EOF
 	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
-	echo | gpg -s >/dev/null
+	gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
+	#echo | gpg -s >/dev/null
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
