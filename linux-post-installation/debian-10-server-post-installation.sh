@@ -386,8 +386,8 @@ eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY
 EOF
-	# Cette opération enregistre le mot de passe avec l'agent GPG
-	gpg -s  >/dev/null
+	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
+	echo | gpg -s >/dev/null
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
