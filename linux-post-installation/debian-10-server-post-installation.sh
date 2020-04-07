@@ -380,7 +380,7 @@ EOF
 	GPG_TTY=$(tty)
 	export GPG_TTY
 	
-	# Démarrage de l'agent à l'ouverture de session
+	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
 eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
