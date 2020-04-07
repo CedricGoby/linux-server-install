@@ -90,7 +90,7 @@ _cmd="apt-get -y install software-properties-common \
 	ca-certificates \
 	curl \
 	keychain \
-	gpg-agent >/dev/null 2>>"$_file_logs""
+	gnupg >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pré-requis..."
 f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
@@ -374,6 +374,19 @@ EOF
 		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
+	
+	# Démarrage de l'agent GPG
+	eval $(gpg-agent --daemon)
+	GPG_TTY=$(tty)
+	export GPG_TTY
+	
+	# Démarrage de l'agent à l'ouverture de session
+	cat << 'EOF' >> $HOME/.bashrc
+eval $(gpg-agent --daemon)
+GPG_TTY=$(tty)
+export GPG_TTY
+EOF
+	
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
@@ -401,6 +414,7 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Chiffrement du fichier de mot de passe SMTP
+	# (Cette opération enregistre le mot de passe avec l'agent GPG)
 	# GPG needs to know who is going to be opening the file and who sent it. Since this file is for you,
 	# there's no need to specify a sender, and you are the recipient.
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
@@ -418,10 +432,10 @@ EOF
 	#_cmd_text="Déchiffrement du mot de passe de la clé GPG pour la session..."
 	#f_cmd "$_cmd" "$_cmd_text"
 	
-	# Ajout de la clé GPG dans keychain
-	_cmd="keychain --agents gpg $(gpg -k | awk 'NR==4' | tr -d ' ')"
-	_cmd_text="Ajout de la clé GPG dans keychain..."
-	f_cmd "$_cmd" "$_cmd_text"	
+	## Ajout de la clé GPG dans keychain
+	#_cmd="keychain --eval --agents gpg $(gpg -k | awk 'NR==4' | tr -d ' ')"
+	#_cmd_text="Ajout de la clé GPG dans keychain..."
+	#f_cmd "$_cmd" "$_cmd_text"	
 	
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
