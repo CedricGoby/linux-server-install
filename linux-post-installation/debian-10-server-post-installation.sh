@@ -374,10 +374,6 @@ EOF
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 	
-	# Démarrage de l'agent GPG
-	#gpg-agent --daemon >/dev/null 2>>"$_file_logs"
-	#export GPG_TTY=$(tty)
-	
 	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
 eval $(gpg-agent --daemon)
