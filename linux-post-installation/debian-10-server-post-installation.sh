@@ -401,7 +401,7 @@ EOF
 	read -p "TLS (on - off) : " _tls
 	read -p "TLS cert check (on - off) : " _tls_cert_check
 	read -p "Adresse email (from) : " _email_from
-	read -p "Utilisateur : " _login
+	read -p "login SMTP : " _login
 
 	# Soumission du mot de passe SMTP
 	printf "\n%s\n" "Mot de passe pour le compte SMTP "$_login""
