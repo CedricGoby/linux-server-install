@@ -421,8 +421,8 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Enregistrement du mot de passe de la clé avec l'agent GPG
-	#gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
-	_cmd="echo | gpg -s >/dev/null 2>>"$_file_logs""
+	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+	#_cmd="echo | gpg -s >/dev/null 2>>"$_file_logs""
 	_cmd_text="Enregistrement du mot de passe de la clé avec l'agent GPG..."
 	f_cmd "$_cmd" "$_cmd_text"
 		
