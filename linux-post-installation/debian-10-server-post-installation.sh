@@ -353,7 +353,7 @@ if f_check_for_package "$_package"; then
      %commit
      %echo done
 EOF
-	# Génération de la paire de clés
+	# Génération de la paire de clés (lance également l'agent GPG gpg-agent)
 	_cmd="gpg --batch --generate-key key_options"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
@@ -373,14 +373,17 @@ EOF
 		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
-	
+
+	# On arrête l'agent GPG. Ainsi, la configuration (gpg-agent.conf)
+	# sera chargée à la prochaine invocation de gpg-agent
+	gpgconf --kill gpg-agent
+		
 	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
 eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY=$(tty)
 EOF
-
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
@@ -547,13 +550,14 @@ if f_check_for_package "$_package"; then
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
 	
-	# Redémarrage du service fail2ban
-	_cmd="systemctl restart "$_package""
-	_cmd_text="Redémarrage du service "$_package"..."
+	# Rechargement de la configuration fail2ban
+	_cmd="fail2ban-client reload >/dev/null 2>>"$_file_logs""
+	_cmd_text="Rechargement de la configuration "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Prisons actives
-	fail2ban-client status >>"$_file_logs"
+	# Liste des prisons actives
+	_cmd="fail2ban-client status >>"$_file_logs""
+	_cmd_text="Liste des prisons actives pour "$_package"..."
 
 fi
 
