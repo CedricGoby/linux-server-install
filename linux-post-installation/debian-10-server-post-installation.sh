@@ -420,10 +420,12 @@ EOF
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Cette opération permet d'enregistrer le mot de passe avec l'agent GPG
-	gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
-	#echo | gpg -s >/dev/null	
-	
+	# Enregistrement du mot de passe de la clé avec l'agent GPG
+	#gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs"
+	_cmd="echo | gpg -s >/dev/null 2>>"$_file_logs""
+	_cmd_text="Enregistrement du mot de passe de la clé avec l'agent GPG..."
+	f_cmd "$_cmd" "$_cmd_text"
+		
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
@@ -530,8 +532,8 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Activation de la prison "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	_package="apache2"
-	if f_check_for_package "$_package"; then
+	_jail="apache2"
+	if f_check_for_package "$_jail"; then
 		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true' \
 		-e '/^\[apache-badbots\]/a enabled = true' \
 		-e '/^\[apache-noscript\]/a enabled = true' \
@@ -540,12 +542,12 @@ if f_check_for_package "$_package"; then
 		-e '/^\[apache-botsearch\]/a enabled = true' \
 		-e '/^\[apache-fakegooglebot\]/a enabled = true' \
 		-e '/^\[apache-modsecurity\]/a enabled = true' \
-		-e '/^\[apache-shellshock\]/a enabled = true'  "$_file_config_fail2ban""
-		_cmd_text="Activation de la prison "$_package"..."
+		-e '/^\[apache-shellshock\]/a enabled = true' "$_file_config_fail2ban""
+		_cmd_text="Activation de la prison "$_jail"..."
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
 	
-	# Redémarrage du service
+	# Redémarrage du service fail2ban
 	_cmd="systemctl restart "$_package""
 	_cmd_text="Redémarrage du service "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
