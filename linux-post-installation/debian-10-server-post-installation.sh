@@ -381,11 +381,13 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 		
 	# Démarrage de l'agent GPG à l'ouverture de session
-	cat << 'EOF' >> $HOME/.bashrc
+	_cmd="cat << 'EOF' >> $HOME/.bashrc
 eval $(gpg-agent --daemon)
 GPG_TTY=$(tty)
 export GPG_TTY=$(tty)
-EOF
+EOF"
+	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
+	f_cmd "$_cmd" "$_cmd_text"
 
 # Configuration ssmtp
 	# Copie du fichier de configuration global pour msmtp
