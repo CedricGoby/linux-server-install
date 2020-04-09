@@ -376,7 +376,9 @@ EOF
 
 	# On arrête l'agent GPG. Ainsi, la configuration (gpg-agent.conf)
 	# sera chargée à la prochaine invocation de gpg-agent
-	gpgconf --kill gpg-agent
+	_cmd="gpgconf --kill gpg-agent"
+	_cmd_text="Arrêt de l'agent GPG..."
+	f_cmd "$_cmd" "$_cmd_text"
 		
 	# Démarrage de l'agent GPG à l'ouverture de session
 	cat << 'EOF' >> $HOME/.bashrc
