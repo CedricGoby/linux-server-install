@@ -381,10 +381,10 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 		
 	# Démarrage de l'agent GPG à l'ouverture de session
-	_cmd="cat >> $HOME/.bashrc <<EOF
-eval \$(gpg-agent --daemon)
-GPG_TTY=\$(tty)
-export GPG_TTY=\$(tty)
+	_cmd="cat >> $HOME/.bashrc <<'EOF'
+eval $(gpg-agent --daemon)
+GPG_TTY=$(tty)
+export GPG_TTY=$(tty)
 EOF"
 	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
 	f_cmd "$_cmd" "$_cmd_text"
