@@ -11,7 +11,7 @@
 f_cmd(){
 printf "\n%s\n" "$2 Veuillez patienter."
 
-eval $1
+eval "$1"
 
 if [[ "$?" != 0 ]]; then
 	printf "%s\n%s\n" "$2 [ ERREUR ] - Consultez les logs" "Souhaitez-vous continuer ? [O/n] "
