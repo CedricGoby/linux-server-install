@@ -19,3 +19,5 @@ from
 user
 # [password]
 password
+# Logfile
+logfile /var/log/msmtp
