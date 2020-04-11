@@ -534,10 +534,12 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Activation de la prison SSH
+	_jail="ssh"
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
-	_cmd_text="Activation de la prison "$_package"..."
+	_cmd_text="Activation de la prison "$_jail"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
+	# Activation de la prison APACHE
 	_jail="apache2"
 	if f_check_for_package "$_jail"; then
 		_cmd="sed -i -e '/^\[apache-auth\]/a enabled = true' \
@@ -561,6 +563,7 @@ if f_check_for_package "$_package"; then
 	# Liste des prisons actives
 	_cmd="fail2ban-client status >>"$_file_logs""
 	_cmd_text="Liste des prisons actives pour "$_package"..."
+	f_cmd "$_cmd" "$_cmd_text"
 
 fi
 
