@@ -7,9 +7,9 @@
 # Auteur : Cédric Goby
 # Versioning : https://gitlab.com/CedricGoby/linux-server-install
 
-#-----------------------------------------------------------------------
-# Fichiers utilisés par le script
-#-----------------------------------------------------------------------
+########################################################################
+# FICHIERS UTILISÉS PAR LE SCRIPT
+########################################################################
 ## Définition des variables et des fichiers
 . var/source.var
 ## Définition des fonctions
@@ -80,9 +80,9 @@ _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
-# LOGICIELS PRÉ-REQUIS
+# INSTALLATION DE LOGICIELS PRÉ-REQUIS
 ########################################################################
-# Installation des logiciels pré-requis
+printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
 _cmd="apt-get -y install software-properties-common \
 	dirmngr \
 	apt-transport-https \
@@ -92,19 +92,13 @@ _cmd="apt-get -y install software-properties-common \
 	gnupg >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pré-requis..."
 f_cmd "$_cmd" "$_cmd_text"
-########################################################################
-# SÉCURITÉ
-########################################################################
 
-#-----------------------------------------------------------------------
-# Paramétrage openSSH
-#-----------------------------------------------------------------------
-printf "\n%s\n" "PARAMÉTRAGE OPENSSH"
+########################################################################
+# COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH
+########################################################################
+printf "\n%s\n" "COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH"
 
-#-----------------------------------------------------------------------
-# Copier une clé publique
-#-----------------------------------------------------------------------
-printf "\n%s" "Souhaitez-vous copier une clé publique SSH ? (yYoO / nN)"
+printf "\n%s" "Souhaitez-vous copier une clé publique pour l'accès SSH ? (yYoO / nN)"
 
 read choice
 	case $choice in
@@ -142,9 +136,9 @@ read choice
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
 						
-			#-----------------------------------------------------------------------
-			# Interdire l'authentification par mot de passe
-			#-----------------------------------------------------------------------
+########################################################################
+# INTERDICTION DE L'ACCÈS SSH PAR MOT DE PASSE
+########################################################################
 			printf "\n%s" "Souhaitez-vous interdire l'authentification SSH par mot de passe ? (yYoO / nN)"
 			
 			read choice
@@ -167,13 +161,9 @@ read choice
 	esac
 
 ########################################################################
-# INSTALLATION DES PAQUETS
+# TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES
 ########################################################################
-printf "\n%s\n" "INSTALLATION DES PAQUETS"
-
-#-----------------------------------------------------------------------
-# Installation de clés GPG
-#-----------------------------------------------------------------------
+printf "\n%s\n" "TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES"
 
 # Installation des clés GPG listées dans le fichier gpg-keys-download.list
 while IFS=$'\t' read _name _url _fingerprint; do
@@ -203,10 +193,10 @@ while IFS=$'\t' read _name _url _fingerprint; do
 	fi
 done <"$_src_gpg_keys_download"
 
-#-----------------------------------------------------------------------
-# Installation de dépôts
-#-----------------------------------------------------------------------
-printf "\n%s\n" "Installation des dépôts"
+########################################################################
+# AJOUTS DE DÉPÔTS DANS LA LISTE 
+########################################################################
+printf "\n%s\n" "AJOUTS DE DÉPÔTS DANS LA LISTE"
 
 # Installation des dépôts listés dans le fichier repository-in.list
 while IFS=$'\t' read _name _repository _type; do
@@ -227,18 +217,23 @@ _cmd="apt-get update >/dev/null 2>>"$_file_logs""
 _cmd_text="Récupération de la liste des mises à jour..."
 f_cmd "$_cmd" "$_cmd_text"
 
-#----------------------------------------------------------------------------------------------------
-# Téléchargement et installation de logiciels (hors dépôts)
-#----------------------------------------------------------------------------------------------------
-printf "\n%s\n" "Téléchargement et installation de logiciels hors dépôts"
+########################################################################
+# TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS
+########################################################################
+printf "\n%s\n" "TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS"
 
-# Installation de gdebi-core
+########################################################################
+# INSTALLATION DE GDEBI
+########################################################################
 # gdebi-core permet d'installer des paquets au format .deb en ligne de commande
-# en résolvant les dépendances.
+
 # Si gdebi-core n'est pas installé, on l'installe.
 _package="gdebi-core"
 f_install_package "$_package"
 
+########################################################################
+# INSTALLATION DES LOGICIELS HORS DEPÔTS
+########################################################################
 # Installation des logiciels listés dans le fichier software-download.list
 while IFS=$'\t' read _name _url _typesum _checksum _type; do
 	# Si le nom du paquet ne commence pas par # dans le fichier software-download.list on le traite
@@ -280,10 +275,10 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 	fi
 done <"$_src_software_download"
 
-#-----------------------------------------------------------------------
-# Installation de paquets via les dépôts
-#-----------------------------------------------------------------------
-printf "\n%s\n" "Installation de paquets via les dépôts"
+########################################################################
+# INSTALLATION DE PAQUETS AVEC LES DEPÔTS
+########################################################################
+printf "\n%s\n" "INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
 
 # Installation des paquets listés dans le fichier pkg-in.list via les dépôts
 while IFS=$'\t' read _package; do
@@ -296,16 +291,15 @@ done <"$_src_pkg_in"
 ########################################################################
 # CONFIGURATION DES PAQUETS
 ########################################################################
-printf "\n%s\n" "CONFIGURATION DES PAQUETS"
+printf "\n%s\n" "CONFIGURATION DES PAQUETS INSTALLÉS"
 
-#-----------------------------------------------------------------------
-# Configuration firewall avec ufw
-#-----------------------------------------------------------------------
-
-# Configuration de ufw
+########################################################################
+# CONFIGURATION UFW
+########################################################################
 _package="ufw"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Interdiction des connexions entrantes
 	_cmd="ufw default deny incoming"
 	_cmd_text="Interdiction des connexions entrantes..."
@@ -324,17 +318,20 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 fi
 
-#-----------------------------------------------------------------------
-# Configuration msmtp
-#-----------------------------------------------------------------------
-# Configuration de msmtp
+########################################################################
+# GPG & MSMTP
+########################################################################
 _package="msmtp"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
 
+########################################################################
+# CRÉATION D'UNE PAIRE DE CLÉS GPG
+########################################################################
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
-	printf "\n%s\n" "Création d'une paire de clé GPG"
+	printf "\n%s\n" "CRÉATION D'UNE PAIRE DE CLÉS GPG"
 	read -p "Email (sera également utilisé comme Real Name) : " _email_gpg_key
 	f_submit_password	
 	# Options pour la création de la paire de clés
@@ -353,9 +350,14 @@ if f_check_for_package "$_package"; then
      %commit
      %echo done
 EOF
-	# Génération de la paire de clés (lance également l'agent GPG gpg-agent)
+	# Génération de la paire de clés (la commande gpg lance également l'agent GPG gpg-agent)
 	_cmd="gpg --batch --generate-key key_options"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
+	f_cmd "$_cmd" "$_cmd_text"
+	
+	# Suppression du fichier d'options pour la création de la paire de clés 
+	_cmd="rm key_options"
+	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
@@ -389,12 +391,15 @@ EOF"
 	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-# Configuration ssmtp
+########################################################################
+# CONFIGURATION MSMTP
+########################################################################
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Copie du fichier de configuration global pour msmtp
 	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
 	_cmd_text="Copie du fichier de configuration globale pour "$_package" (SMTP)..."
 	f_cmd "$_cmd" "$_cmd_text"
-	printf "\n%s\n" "Configuration de "$_package""
+	printf "\n%s\n" "Paramètres de configuration pour "$_package""
 	# Variables de configuration ssmtp
 	read -p "Serveur SMTP : " _host
 	read -p "Port SMTP : " _port
@@ -426,7 +431,7 @@ EOF"
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
-
+	
 	# Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)
 	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
 	_cmd_text="Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)..."
@@ -458,15 +463,15 @@ fi
 ########################################################################
 # INSTALLATION D'APACHE (reverse proxy)
 ########################################################################
-
 printf "\n%s" "Souhaitez-vous installer apache (reverse proxy SSL) ? (yYoO / nN)"
 
 read choice
 	case $choice in
-		[yYoO]*) 
+		[yYoO]*)
 			_package="apache2"
 			f_install_package "$_package"
 
+			printf "\n%s\n" "CONFIGURATION DE "$_package""
 			# Activation de modules
 			_cmd="a2enmod ssl xml2enc proxy >/dev/null 2>>"$_file_logs""
 			_cmd_text="Activation de modules "$_package"..."
@@ -481,9 +486,8 @@ read choice
 	esac
 	
 ########################################################################
-# CRÉATION DU CERTIFICAT SSL
+# CRÉATION DU CERTIFICAT SSL LET'S ENCCRYPT
 ########################################################################
-
 printf "\n%s" "Souhaitez-vous créer un certificat SSL (Wildcard) ? (yYoO / nN)"
 
 read choice
@@ -493,6 +497,7 @@ read choice
 			_package="certbot"
 			f_install_package "$_package"
 
+			printf "\n%s\n" "CONFIGURATION DE "$_package""
 			# Arrêt d'apache si il tourne
 			_service="apache2"
 			if systemctl is-active --quiet "$_service" ; then
@@ -521,10 +526,9 @@ read choice
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
 
-#-----------------------------------------------------------------------
-# Configuration fail2ban
-#-----------------------------------------------------------------------
-# Configuration de fail2ban
+########################################################################
+# CONFIGURATION FAIL2BAN
+########################################################################
 _package="fail2ban"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
@@ -567,10 +571,9 @@ if f_check_for_package "$_package"; then
 
 fi
 
-#-----------------------------------------------------------------------
-# Configuration logwatch
-#-----------------------------------------------------------------------
-# Configuration de logwatch
+########################################################################
+# CONFIGURATION LOGWATCH
+########################################################################
 _package="logwatch"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
@@ -593,13 +596,9 @@ if f_check_for_package "$_package"; then
 fi
 
 ########################################################################
-# SYSTÈME
+# TÂCHES PLANIFIÉES
 ########################################################################
 printf "\n%s\n" "TÂCHES PLANIFIÉES"
-
-#-----------------------------------------------------------------------
-# Création des tâches planifiées
-#-----------------------------------------------------------------------
 
 # Sauvegarde du fichier /etc/crontab vers /etc/crontab.bak
 _cmd="cp $_file_crontab $_file_crontab.bak"
@@ -613,7 +612,7 @@ _cmd_text="Planification de la mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
-# RAPPORT
+# ENVOI DES LOGS PAR EMAIL
 ########################################################################
 # Envoi du fichier de logs 
 printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"

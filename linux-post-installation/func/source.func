@@ -52,6 +52,7 @@ f_check_for_package() {
 #-----------------------------------------------------------------------
 f_install_package() {
 # Test de la présence du paquet
+printf "\n%s\n" "Vérification de la présence de "$1"..."
 if f_check_for_package "$1"; then
     printf "\n%s\n" "$(date) $1 : Paquet déjà installé.[ AVERTISSEMENT ]" | tee -a "$_file_logs"
 else
