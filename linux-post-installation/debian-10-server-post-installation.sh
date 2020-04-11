@@ -568,7 +568,7 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Liste des prisons actives
-	_cmd="fail2ban-client status >>"$_file_logs""
+	_cmd="fail2ban-client status | cut -c4- >>"$_file_logs""
 	_cmd_text="Liste des prisons actives pour "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
 
