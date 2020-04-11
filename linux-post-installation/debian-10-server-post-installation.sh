@@ -596,9 +596,9 @@ if f_check_for_package "$_package"; then
 fi
 
 ########################################################################
-# TÂCHES PLANIFIÉES
+# MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
-printf "\n%s\n" "TÂCHES PLANIFIÉES"
+printf "\n%s\n" "MISE EN PLACE DES TÂCHES PLANIFIÉES"
 
 # Sauvegarde du fichier /etc/crontab vers /etc/crontab.bak
 _cmd="cp $_file_crontab $_file_crontab.bak"
@@ -614,7 +614,6 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # ENVOI DES LOGS PAR EMAIL
 ########################################################################
-# Envoi du fichier de logs 
 printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"
 
 read choice
@@ -641,5 +640,5 @@ EOF"
 ########################################################################
 # FIN DE PROGRAMME
 ########################################################################
-printf "\n%s\n%s\n" "Fin du programme de post installation!" "Vous pouvez consulter le fichier journal "$_file_logs""
+printf "\n%s\n%s\n" "FIN DU PROGRAMME DE POST INSTALLATION!" "Vous pouvez consulter le fichier journal "$_file_logs""
 exit 0
