@@ -381,11 +381,11 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 		
 	# Démarrage de l'agent GPG à l'ouverture de session
-	_cmd="cat >> $HOME/.bashrc <<-\'EOF\'
-			eval $(gpg-agent --daemon)
-			GPG_TTY=$(tty)
-			export GPG_TTY=$(tty)
-			EOF"
+	_cmd="cat >> $HOME/.bashrc <<\'EOF\'
+eval $(gpg-agent --daemon)
+GPG_TTY=$(tty)
+export GPG_TTY=$(tty)
+EOF"
 	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
 	f_cmd "$_cmd" "$_cmd_text"
 
@@ -624,16 +624,16 @@ read choice
 			read -p "Destinataire des logs : " _mailto
 			read -p "Expéditeur des logs : " _mailfrom	
 								
-			msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
+			_cmd="msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
 From: $_mailfrom
 To: $_mailto
 Content-Type: text/plain; charset=UTF-8
 Subject: $(hostname) $(hostname -I) - Logs post installation
 $(cat "$_file_logs")
-EOF
+EOF"
 			_cmd_text="Envoi du fichier de logs à "$_mailto"..."
 			f_cmd "$_cmd" "$_cmd_text";;
-		[nN]*) printf "%s\n" "Aucun mot de passe pour la clé. Suite du programme...";;
+		[nN]*) printf "%s\n" "Les logs ne seront pas envoyés. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
 
