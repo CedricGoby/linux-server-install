@@ -129,9 +129,11 @@ read choice
 			_cmd="chown -R "$_user" "$_home/$_user/$_dir_ssh""
 			_cmd_text="Propriété du répertoire "$_home/$_user/$_dir_ssh"..."
 			f_cmd "$_cmd" "$_cmd_text"
+			
 			_cmd="chmod 700 "$_home/$_user/$_dir_ssh""
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh"..."
 			f_cmd "$_cmd" "$_cmd_text"			
+			
 			_cmd="chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
@@ -532,6 +534,7 @@ read choice
 _package="fail2ban"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Création du fichier de configuration
 	_cmd="cp "$_src_config_fail2ban" "$_file_config_fail2ban""
 	_cmd_text="Création du fichier de configuration "$_package" "$_file_config_fail2ban"..."
@@ -577,7 +580,7 @@ fi
 _package="logwatch"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "Configuration de $_package"
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Prompt utilisateur
 	read -p "Destinataire logwatch : " _mailto
 	read -p "Expéditeur logwatch : " _mailfrom
