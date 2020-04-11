@@ -429,7 +429,6 @@ EOF"
 
 	# Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)
 	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-	#_cmd="echo | gpg -s >/dev/null 2>>"$_file_logs""
 	_cmd_text="Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)..."
 	f_cmd "$_cmd" "$_cmd_text"
 		
