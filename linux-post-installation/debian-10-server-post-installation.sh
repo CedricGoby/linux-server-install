@@ -337,7 +337,7 @@ if f_check_for_package "$_package"; then
 	read -p "Email (sera également utilisé comme Real Name) : " _email_gpg_key
 	f_submit_password	
 	# Options pour la création de la paire de clés
-	cat >key_options <<EOF
+	cat >key_options <<	EOF
      %echo Generating an OpenPGP key
      Key-Type: RSA
      Key-Length: 3072

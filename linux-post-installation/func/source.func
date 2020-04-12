@@ -80,7 +80,8 @@ _cmd_text="Création du fichier de logs pour $1..."
 f_cmd "$_cmd" "$_cmd_text"
 
 # Mise en place de la rotation du fichier de logs pour $1
-cmd="cat >/etc/logrotate.d/$1 <<EOF
+# Une tabulation devant EOF permet de respecter l'indentation.
+_cmd="cat >/etc/logrotate.d/$1 <<	EOF
 /var/log/$1 {
 	monthly
 	size 100M
