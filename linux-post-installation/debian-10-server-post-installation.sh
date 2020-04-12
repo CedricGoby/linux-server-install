@@ -422,8 +422,8 @@ EOF"
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Chiffrement du fichier de mot de passe SMTP
-	# GPG needs to know who is going to be opening the file and who sent it. Since this file is for you,
-	# there's no need to specify a sender, and you are the recipient.
+	# GPG doit savoir qui va ouvrir le fichier et qui l'envoi. Puisque le fichier est pour vous,
+	# il est inutile de spécifier un expéditeur, et vous êtes le destinataire.
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
 	_cmd="gpg -e -r "$_login" /etc/.msmtp-password"
 	_cmd_text="Chiffrement du fichier de mot de passe SMTP..."
