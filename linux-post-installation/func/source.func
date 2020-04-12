@@ -69,6 +69,30 @@ fi
 }
 
 #-----------------------------------------------------------------------
+# Mise en place de logs pour un programme
+#-----------------------------------------------------------------------
+f_log_setup() {
+
+# Création du fichier de logs	
+touch /var/log/$1
+
+# Mise en place de la rotation du fichier de logs
+cat >/etc/logrotate.d/$1 <<EOF
+/var/log/$1 {
+	monthly
+	size 100M
+	rotate 12
+	compress
+	delaycompress
+	missingok
+	notifempty
+	create 644 root root
+}
+EOF
+
+}
+
+#-----------------------------------------------------------------------
 # Soumission de mot de passe "fort"
 # 12 à 25 caractères
 # avec obligatoirement 1 chiffre, 1 majuscule, 1 minuscule, 1 caractère spécial

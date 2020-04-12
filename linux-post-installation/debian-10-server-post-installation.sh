@@ -455,6 +455,9 @@ EOF"
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
+	# Mise en place des logs
+	f_log_setup "$_package"
+	
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
 	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
