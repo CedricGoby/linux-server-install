@@ -72,12 +72,15 @@ fi
 # Mise en place de logs pour un programme
 #-----------------------------------------------------------------------
 f_log_setup() {
+printf "\n%s\n" "MISE EN PLACE DE LOGS POUR $1"
 
-# Création du fichier de logs	
-touch /var/log/$1
+# Création du fichier de logs
+_cmd="touch /var/log/$1"
+_cmd_text="Création du fichier de logs pour $1..."
+f_cmd "$_cmd" "$_cmd_text"
 
-# Mise en place de la rotation du fichier de logs
-cat >/etc/logrotate.d/$1 <<EOF
+# Mise en place de la rotation du fichier de logs pour $1
+cmd="cat >/etc/logrotate.d/$1 <<EOF
 /var/log/$1 {
 	monthly
 	size 100M
@@ -88,7 +91,9 @@ cat >/etc/logrotate.d/$1 <<EOF
 	notifempty
 	create 644 root root
 }
-EOF
+EOF"
+_cmd_text="Mise en place de la rotation du fichier de logs pour $1..."
+f_cmd "$_cmd" "$_cmd_text"
 
 }
 
