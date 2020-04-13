@@ -331,6 +331,40 @@ if f_check_for_package "$_package"; then
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
+	# Démarrage de l'agent GPG
+	eval $(gpg-agent --daemon --allow-preset-passphrase)
+
+	# Si le fichier gpg-agent.conf n'existe pas on le crée
+	if [ ! -f "$_file_gpg_conf" ]; then
+		# Chemin si l'utilisateur n'est pas root
+		if [[ $(id -u) != 0 ]]; then
+			_gpg_conf_dir="~/.gnupg"
+			else
+			_gpg_conf_dir="/root/.gnupg"
+		fi
+		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
+		_cmd_text="Copie du fichier de configuration pour gpg..."
+		f_cmd "$_cmd" "$_cmd_text"
+		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
+		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
+		f_cmd "$_cmd" "$_cmd_text"		
+	fi
+	
+	# Arrêt de l'agent GPG
+	gpgconf --kill gpg-agent
+	
+		
+	# Démarrage de l'agent GPG à l'ouverture de session
+	_cmd="cat >> $HOME/.bashrc <<'EOF'
+eval \$(gpg-agent --daemon --allow-preset-passphrase)
+export GPG_TTY=\$(tty)
+EOF"
+	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
+	f_cmd "$_cmd" "$_cmd_text"
+
+	# Démarrage de l'agent GPG (et rechargement du fichier gpg-agent.conf)
+	eval $(gpg-agent --daemon --allow-preset-passphrase)
+
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "CRÉATION D'UNE PAIRE DE CLÉS GPG"
@@ -352,7 +386,7 @@ if f_check_for_package "$_package"; then
      %commit
      %echo done
 EOF
-	# Génération de la paire de clés (la commande gpg lance également l'agent GPG gpg-agent)
+	# Génération de la paire de clés
 	_cmd="gpg --batch --generate-key key_options"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
@@ -362,36 +396,9 @@ EOF
 	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Si le fichier gpg-agent.conf n'existe pas on le crée
-	if [ ! -f "$_file_gpg_conf" ]; then
-		# Chemin si l'utilisateur n'est pas root
-		if [[ $(id -u) != 0 ]]; then
-			_gpg_conf_dir="~/.gnupg"
-			else
-			_gpg_conf_dir="/root/.gnupg"
-		fi
-		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
-		_cmd_text="Copie du fichier de configuration pour gpg..."
-		f_cmd "$_cmd" "$_cmd_text"
-		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
-		f_cmd "$_cmd" "$_cmd_text"		
-	fi
-
-	# On arrête l'agent GPG. Ainsi, la configuration (gpg-agent.conf)
-	# sera chargée à la prochaine invocation de gpg-agent
-	_cmd="gpgconf --kill gpg-agent"
-	_cmd_text="Arrêt de l'agent GPG..."
-	f_cmd "$_cmd" "$_cmd_text"
-		
-	# Démarrage de l'agent GPG à l'ouverture de session
-	_cmd="cat >> $HOME/.bashrc <<'EOF'
-eval \$(gpg-agent --daemon)
-GPG_TTY=\$(tty)
-export GPG_TTY=\$(tty)
-EOF"
-	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
-	f_cmd "$_cmd" "$_cmd_text"
+	# Enregistrement de la clé avec gpg-agent
+	_keygrip=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
+	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip" <<< "$_password"
 
 ########################################################################
 # CONFIGURATION MSMTP
@@ -434,10 +441,10 @@ EOF"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
-	# Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)
-	_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-	_cmd_text="Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)..."
-	f_cmd "$_cmd" "$_cmd_text"
+	## Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)
+	#_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
+	#_cmd_text="Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)..."
+	#f_cmd "$_cmd" "$_cmd_text"
 		
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
