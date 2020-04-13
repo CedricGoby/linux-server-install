@@ -331,7 +331,10 @@ if f_check_for_package "$_package"; then
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
-	gpg --with-keygrip -K
+	# Création des dossiers et fichiers pour gnupg
+	_cmd="gpg --list-keys"
+	_cmd_text="Création des dossiers et fichiers pour gnupg..."
+	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas on le crée
 	if [ ! -f "$_file_gpg_conf" ]; then
