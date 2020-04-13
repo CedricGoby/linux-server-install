@@ -377,14 +377,15 @@ EOF
 		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
-	
-	# Rechargement de la configuration de l'agent GPG
-	gpg-connect-agent reloadagent /bye
 		
 	# Configuration de l'agent GPG à l'ouverture de session
 	_cmd="cat >> $HOME/.bashrc <<'EOF'
 export GPG_TTY=\$(tty)
 EOF"
+	
+	# Rechargement de la configuration de l'agent GPG
+	gpg-connect-agent reloadagent /bye
+
 	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
