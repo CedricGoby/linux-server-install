@@ -433,11 +433,6 @@ EOF"
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
-	## Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)
-	#_cmd="gpg --quiet --decrypt "$_file_passwd_msmtp" >/dev/null 2>>"$_file_logs""
-	#_cmd_text="Déchiffrement du fichier de mot de passe (enregistre le mot de passe de la clé avec l'agent GPG)..."
-	#f_cmd "$_cmd" "$_cmd_text"
 		
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
