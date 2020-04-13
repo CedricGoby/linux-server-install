@@ -387,6 +387,7 @@ export GPG_TTY=\$(tty)
 EOF"
 	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
 	f_cmd "$_cmd" "$_cmd_text"
+	
 	# Enregistrement de la clé avec gpg-agent
 	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
 	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password"
