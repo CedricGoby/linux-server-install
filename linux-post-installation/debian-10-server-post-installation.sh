@@ -331,40 +331,6 @@ if f_check_for_package "$_package"; then
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
-	# Démarrage de l'agent GPG
-	eval $(gpg-agent --daemon --allow-preset-passphrase)
-
-	# Si le fichier gpg-agent.conf n'existe pas on le crée
-	if [ ! -f "$_file_gpg_conf" ]; then
-		# Chemin si l'utilisateur n'est pas root
-		if [[ $(id -u) != 0 ]]; then
-			_gpg_conf_dir="~/.gnupg"
-			else
-			_gpg_conf_dir="/root/.gnupg"
-		fi
-		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
-		_cmd_text="Copie du fichier de configuration pour gpg..."
-		f_cmd "$_cmd" "$_cmd_text"
-		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
-		f_cmd "$_cmd" "$_cmd_text"		
-	fi
-	
-	# Arrêt de l'agent GPG
-	gpgconf --kill gpg-agent
-	
-		
-	# Démarrage de l'agent GPG à l'ouverture de session
-	_cmd="cat >> $HOME/.bashrc <<'EOF'
-eval \$(gpg-agent --daemon --allow-preset-passphrase)
-export GPG_TTY=\$(tty)
-EOF"
-	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
-	f_cmd "$_cmd" "$_cmd_text"
-
-	# Démarrage de l'agent GPG (et rechargement du fichier gpg-agent.conf)
-	eval $(gpg-agent --daemon --allow-preset-passphrase)
-
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "CRÉATION D'UNE PAIRE DE CLÉS GPG"
@@ -395,7 +361,32 @@ EOF
 	_cmd="rm key_options"
 	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
 	f_cmd "$_cmd" "$_cmd_text"
-
+	
+	# Si le fichier gpg-agent.conf n'existe pas on le crée
+	if [ ! -f "$_file_gpg_conf" ]; then
+		# Chemin si l'utilisateur n'est pas root
+		if [[ $(id -u) != 0 ]]; then
+			_gpg_conf_dir="~/.gnupg"
+			else
+			_gpg_conf_dir="/root/.gnupg"
+		fi
+		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
+		_cmd_text="Copie du fichier de configuration pour gpg..."
+		f_cmd "$_cmd" "$_cmd_text"
+		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
+		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
+		f_cmd "$_cmd" "$_cmd_text"		
+	fi
+	
+	# Rechargement de la configuration de l'agent GPG
+	gpg-connect-agent reloadagent /bye
+		
+	# Configuration de l'agent GPG à l'ouverture de session
+	_cmd="cat >> $HOME/.bashrc <<'EOF'
+export GPG_TTY=\$(tty)
+EOF"
+	_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
+	f_cmd "$_cmd" "$_cmd_text"
 	# Enregistrement de la clé avec gpg-agent
 	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
 	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password"
