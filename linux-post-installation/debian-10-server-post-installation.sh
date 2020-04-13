@@ -397,8 +397,8 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Enregistrement de la clé avec gpg-agent
-	_keygrip=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
-	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip" <<< "$_password"
+	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
+	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password"
 
 ########################################################################
 # CONFIGURATION MSMTP
