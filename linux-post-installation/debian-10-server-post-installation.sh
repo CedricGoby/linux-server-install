@@ -379,22 +379,21 @@ EOF
 	_cmd="rm key_options"
 	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
-	# Configuration de l'agent GPG à l'ouverture de session
-	#_cmd="cat >> $HOME/.bashrc <<'EOF'
-#export GPG_TTY=\$(tty)
-#EOF"
-	#_cmd_text="Démarrage de l'agent GPG à l'ouverture de session..."
-	#f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Rechargement de la configuration de l'agent GPG
-	gpgconf --kill gpg-agent
+	_cmd="gpgconf --kill gpg-agent"
+	_cmd_text="Arrêt de gpg-agent"
+	f_cmd "$_cmd" "$_cmd_text"
 	sleep 5
-	gpg-connect-agent /bye
+	_cmd="gpg-connect-agent /bye"
+	_cmd_text="Démarrage de gpg-agent"
+	f_cmd "$_cmd" "$_cmd_text"
 	sleep 5
 	# Enregistrement de la clé avec gpg-agent
 	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
-	/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password"
+	_cmd="/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password""
+	_cmd_text="Enregistrement de la clé avec gpg-agent"
+	f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
 # CONFIGURATION MSMTP
