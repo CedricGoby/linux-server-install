@@ -517,8 +517,8 @@ read choice
 			printf "\n%s\n" "Création du certificat SSL Let's Encrypt (Wildcard)"
 			read -p "Domaine du certificat SSL : " _domain
 			read -p "Email attaché au certificat SSL : " _email_letsencrypt
-			_cmd="certbot certonly --dry-run --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "*.$_domain" -d "$_domain" >> "$_file_logs""
-			_cmd_text="Création du certificat SSL Let's Encrypt (Wildcard) pour "$_domain"..."
+			_cmd="certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "$_domain" >> "$_file_logs""
+			_cmd_text="Création du certificat SSL Let's Encrypt pour "$_domain"..."
 			f_cmd "$_cmd" "$_cmd_text"			
 			# Redémarrage d'apache si il tournait
 			if [[ $_status = 1 ]] ; then
