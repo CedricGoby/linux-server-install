@@ -394,7 +394,7 @@ EOF
 	sleep 5
 	# Enregistrement du mot de passe de la clé avec gpg-preset-passphrase
 	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
-	_cmd="/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< "$_password""
+	_cmd="/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< '$_password'"
 	_cmd_text="Enregistrement de la clé avec gpg-agent"
 	f_cmd "$_cmd" "$_cmd_text"
 
@@ -514,7 +514,7 @@ read choice
 			fi
 
 			# Création du certificat SSL (Wildcard)
-			printf "\n%s\n" "Création du certificat SSL Let's Encrypt (Wildcard)"
+			printf "\n%s\n" "Création du certificat SSL Let's Encrypt"
 			read -p "Domaine du certificat SSL : " _domain
 			read -p "Email attaché au certificat SSL : " _email_letsencrypt
 			_cmd="certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "$_domain" >> "$_file_logs""
