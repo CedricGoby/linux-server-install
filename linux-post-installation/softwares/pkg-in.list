@@ -13,4 +13,4 @@ certbot
 mysecureshell
 #apticron
 #-- Containers --#
-#docker-ce
+docker-ce
