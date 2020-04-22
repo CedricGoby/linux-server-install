@@ -89,6 +89,7 @@ _cmd="apt-get -y install software-properties-common \
 	lsb-release \
 	ca-certificates \
 	curl \
+	git \
 	gnupg >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pré-requis..."
 f_cmd "$_cmd" "$_cmd_text"
@@ -478,7 +479,7 @@ read choice
 
 			printf "\n%s\n" "CONFIGURATION DE "$_package""
 			# Activation de modules
-			_cmd="a2enmod ssl xml2enc proxy rewrite headers proxy_http >/dev/null 2>>"$_file_logs""
+			_cmd="a2enmod ssl xml2enc proxy rewrite headers proxy_http proxy_wstunnel >/dev/null 2>>"$_file_logs""
 			_cmd_text="Activation de modules "$_package"..."
 			f_cmd "$_cmd" "$_cmd_text"
 
