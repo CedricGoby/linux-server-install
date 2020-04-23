@@ -88,6 +88,7 @@ _cmd="apt-get -y install software-properties-common \
 	apt-transport-https \
 	lsb-release \
 	ca-certificates \
+	acl \
 	curl \
 	gnupg >/dev/null 2>>"$_file_logs""
 _cmd_text="Installation des logiciels pré-requis..."
