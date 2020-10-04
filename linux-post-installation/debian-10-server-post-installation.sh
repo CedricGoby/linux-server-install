@@ -406,7 +406,7 @@ EOF
 	_cmd="gpg --batch --generate-key key_options"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Suppression du fichier d'options pour la création de la paire de clés 
 	_cmd="rm key_options"
 	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
@@ -526,7 +526,7 @@ read choice
 		[nN]*) printf "%s\n" ""$_package" ne sera pas installé. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
-	
+
 ########################################################################
 # CRÉATION DU CERTIFICAT SSL LET'S ENCCRYPT
 ########################################################################
