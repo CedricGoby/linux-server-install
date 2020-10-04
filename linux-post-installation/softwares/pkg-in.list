@@ -10,7 +10,7 @@ ufw
 fail2ban
 logwatch
 certbot
-mysecureshell
+#mysecureshell
 #apticron
 #-- Containers --#
 docker-ce

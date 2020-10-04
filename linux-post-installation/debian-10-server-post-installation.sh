@@ -83,17 +83,20 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # MISE EN PLACE DU FICHIER BASH ALIASES
 ########################################################################
+# Vérification de l'absence du fichier ~/.bash_aliases
 if [ ! -f ~/.bash_aliases ]; then
-
+	# Copie du fichier modèle ~/.bash_aliases
 	_cmd="cp "$_src_bash_aliases" "$_file_bash_aliases""
 	_cmd_text="Copie du fichier de bash aliases..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	cmd="cat >> ~/.bashrc <<	EOF
+	# Modification du fichier ~/.bashrc
+	cmd=$(cat >> ~/.bashrc <<	'EOF'
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-EOF"
+EOF
+)
 	_cmd_text="Modification du fichier bashrc..."
 	f_cmd "$_cmd" "$_cmd_text"
 
@@ -282,9 +285,9 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 				_cmd_text="Installation du fichier binaire $_name..."
 				f_cmd "$_cmd" "$_cmd_text"
 				else
-				# Installation du fichier deb avec gdebi
+				# Installation du paquet deb avec gdebi
 				_cmd="gdebi --n $_name"
-				_cmd_text="Installation du fichier deb $_name..."
+				_cmd_text="Installation du paquet deb $_name..."
 				f_cmd "$_cmd" "$_cmd_text"				
 				fi
 			else
