@@ -40,6 +40,9 @@ _dir_ssh=".ssh"
 _file_authorized_keys="authorized_keys"
 
 ### FICHIERS DE CONFIGURATION
+## bash aliases
+_src_bash_aliases="templates/bash_aliases.src"
+_file_bash_aliases="~/.bash_aliases"
 ## msmtp
 # Fichier source pour msmtp
 _src_msmtp="templates/msmtprc.src"

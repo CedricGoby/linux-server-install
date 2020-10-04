@@ -18,6 +18,7 @@
 ## Fichiers modèles :
 # templates/msmtp.src
 # templates/gpg-agent.conf.src
+# templates/bash_aliases.src
 #
 ## Fichiers de listes :
 # conf/gpg-keys-download.list : Clés GPG à installer
@@ -78,6 +79,25 @@ f_cmd "$_cmd" "$_cmd_text"
 _cmd="apt-get -y upgrade >/dev/null 2>>"$_file_logs""
 _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
+
+########################################################################
+# MISE EN PLACE DU FICHIER BASH ALIASES
+########################################################################
+if [ ! -f ~/.bash_aliases ]; then
+
+	_cmd="cp "$_src_bash_aliases" "$_file_bash_aliases""
+	_cmd_text="Copie du fichier de bash aliases..."
+	f_cmd "$_cmd" "$_cmd_text"
+
+	cmd="cat >> ~/.bashrc <<	EOF
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+EOF"
+	_cmd_text="Modification du fichier bashrc..."
+	f_cmd "$_cmd" "$_cmd_text"
+
+fi
 
 ########################################################################
 # INSTALLATION DE LOGICIELS PRÉ-REQUIS
