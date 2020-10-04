@@ -540,7 +540,7 @@ read choice
 			f_install_package "$_package"
 
 			printf "\n%s\n" "CONFIGURATION DE "$_package""
-			# Arrêt d'apache si il tourne
+			# Arrêt d'apache si il fonctionne
 			_service="apache2"
 			if systemctl is-active --quiet "$_service" ; then
 				# Arrêt d'apache
@@ -557,7 +557,8 @@ read choice
 			_cmd="certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "$_domain" >> "$_file_logs""
 			_cmd_text="Création du certificat SSL Let's Encrypt pour "$_domain"..."
 			f_cmd "$_cmd" "$_cmd_text"			
-			# Redémarrage d'apache si il tournait
+
+			# Redémarrage d'apache si il fonctionnait avant la création du certificat
 			if [[ $_status = 1 ]] ; then
 				# Démarrage d'apache
 				_cmd="systemctl start "$_service" >/dev/null 2>>"$_file_logs""
