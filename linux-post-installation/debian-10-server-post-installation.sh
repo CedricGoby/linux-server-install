@@ -91,7 +91,7 @@ if [ ! -f ~/.bash_aliases ]; then
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Modification du fichier ~/.bashrc
-	cmd=$(cat >> ~/.bashrc <<	'EOF'
+	cmd=$(cat >> ~/.bashrc << EOF
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
@@ -345,7 +345,7 @@ if f_check_for_package "$_package"; then
 fi
 
 ########################################################################
-# GPG & MSMTP
+# GPG, MSMTP, ALIASES
 ########################################################################
 _package="msmtp"
 # Si le paquet est installé
@@ -380,9 +380,10 @@ if f_check_for_package "$_package"; then
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "CRÉATION D'UNE PAIRE DE CLÉS GPG"
 	read -p "Email (sera également utilisé comme Real Name) : " _email_gpg_key
-	f_submit_password	
-	# Options pour la création de la paire de clés
-	cat >key_options <<	EOF
+	f_submit_password
+	
+	# Création du fichier key_options pour la génération de la paire de clés
+	cmd=$(cat >key_options <<	EOF
      %echo Generating an OpenPGP key
      Key-Type: RSA
      Key-Length: 3072
@@ -393,10 +394,14 @@ if f_check_for_package "$_package"; then
      Name-Email: $_email_gpg_key
      Expire-Date: 0
      Passphrase: $_password
-     # Do a commit here, so that we can later print "done" :-)
+     # Do a commit here, so that we can later print "done"
      %commit
      %echo done
 EOF
+)
+	_cmd_text="Création du fichier key_options..."
+	f_cmd "$_cmd" "$_cmd_text"
+
 	# Génération de la paire de clés (lance également l'agent GPG)
 	_cmd="gpg --batch --generate-key key_options"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
@@ -488,6 +493,14 @@ EOF
 	_cmd_text="Test du MTA $_package..."
 	f_cmd "$_cmd" "$_cmd_text"	
 fi
+
+########################################################################
+# CONFIGURATION ALIASES
+########################################################################
+	# Modification du fichier /etc/aliases
+	_cmd="echo "root: $_email_from" >> /etc/aliases"
+	_cmd_text="Modification du fichier /etc/aliases..."
+	f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
 # INSTALLATION D'APACHE (reverse proxy)
@@ -587,6 +600,13 @@ if f_check_for_package "$_package"; then
 		-e '/^\[apache-shellshock\]/a enabled = true' "$_file_config_fail2ban""
 		_cmd_text="Activation de la prison "$_jail"..."
 		f_cmd "$_cmd" "$_cmd_text"
+	fi
+
+	# Configuration de fail2ban avec ufw
+    if grep ENABLED=yes /etc/ufw/ufw.conf>/dev/null; then
+		_cmd="sed -i -e 's/banaction = iptables-multiport/banaction = ufw/' -e 's/banaction_allports = iptables-allports/banaction_allports = ufw/' $_file_config_fail2ban"
+		_cmd_text="Configuration de fail2ban avec ufw..."
+		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 	
 	# Rechargement de la configuration fail2ban
