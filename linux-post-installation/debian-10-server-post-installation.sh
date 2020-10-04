@@ -602,7 +602,7 @@ if f_check_for_package "$_package"; then
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
 
-	# Configuration de fail2ban avec ufw
+	# Configuration de fail2ban avec ufw si ufw est activé
     if grep ENABLED=yes /etc/ufw/ufw.conf>/dev/null; then
 		_cmd="sed -i -e 's/banaction = iptables-multiport/banaction = ufw/' -e 's/banaction_allports = iptables-allports/banaction_allports = ufw/' $_file_config_fail2ban"
 		_cmd_text="Configuration de fail2ban avec ufw..."
@@ -618,7 +618,6 @@ if f_check_for_package "$_package"; then
 	_cmd="fail2ban-client status | cut -c4- >>"$_file_logs""
 	_cmd_text="Liste des prisons actives pour "$_package"..."
 	f_cmd "$_cmd" "$_cmd_text"
-
 fi
 
 ########################################################################
