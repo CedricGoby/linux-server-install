@@ -492,9 +492,21 @@ EOF
 	f_log_setup "$_package"
 
 	# Modification du fichier /etc/aliases
-	_cmd="echo "root: $_email_from" >> /etc/aliases"
+	_cmd="echo "root: $_email_from" > /etc/aliases"
 	_cmd_text="Modification du fichier /etc/aliases..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+	if [ ! -f /etc/aliases ]; then
+	# Création du fichier /etc/aliases
+	_cmd="echo "root: $_email_from" > /etc/aliases"
+	_cmd_text="Création du fichier /etc/aliases, ajout de l'expéditeur..."
+	f_cmd "$_cmd" "$_cmd_text"
+	else
+	# Modification du fichier
+	_cmd="echo "root: $_email_from" >> /etc/aliases"
+	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases..."
+	f_cmd "$_cmd" "$_cmd_text"
+	fi
 	
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
@@ -664,7 +676,7 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Copie du fichier de configuration $_file_config_apticron..."
 	f_cmd "$_cmd" "$_cmd_text"
 	# Modification du fichier
-	_cmd="sed -i -e 's/EMAIL="root"/EMAIL=\"$_mailto\"/' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM=\"$_mailfrom\"/' "$_file_config_apticron""
+	_cmd="sed -i -e 's/EMAIL="root"/EMAIL="$_mailto"/' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM="$_mailfrom"/' "$_file_config_apticron""
 	_cmd_text="Ajout du destinataire et de l'expéditeur dans le fichier $_file_config_apticron..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
