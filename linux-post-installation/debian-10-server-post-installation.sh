@@ -421,6 +421,7 @@ EOF
 	_cmd_text="Démarrage de gpg-agent"
 	f_cmd "$_cmd" "$_cmd_text"
 	sleep 5
+
 	# Enregistrement du mot de passe de la clé avec gpg-preset-passphrase
 	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
 	_cmd="/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< '$_password'"
