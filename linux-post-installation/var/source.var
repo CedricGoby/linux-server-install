@@ -58,3 +58,5 @@ _src_config_fail2ban="/etc/fail2ban/jail.conf"
 _file_config_fail2ban="/etc/fail2ban/jail.local"
 ## logwatch
 _file_config_logwatch="/usr/share/logwatch/default.conf/logwatch.conf"
+## apticron
+_file_config_apticron="/etc/apticron/apticron.conf"

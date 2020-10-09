@@ -646,6 +646,33 @@ if f_check_for_package "$_package"; then
 fi
 
 ########################################################################
+# CONFIGURATION APTICRON
+########################################################################
+_package="apticron"
+# Si le paquet est installé
+if f_check_for_package "$_package"; then
+	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	# Prompt utilisateur
+	read -p "Destinataire apticron : " _mailto
+
+	if [ ! -f "$_file_config_apticron" ]; then
+	# Création du fichier
+	_cmd="touch "$_file_config_apticron""
+	_cmd_text="Création du fichier $_file_config_apticron..."
+	f_cmd "$_cmd" "$_cmd_text"
+	# Modification du fichier
+	_cmd='echo -e "EMAIL="$_mailto"" >> $_file_config_apticron'
+	_cmd_text="Ajout du destinataire dans le fichier $_file_config_apticron..."
+	f_cmd "$_cmd" "$_cmd_text"	
+	fi
+
+	# Modification du fichier
+	_cmd="sed -i 's/mail@domain.com/$_mailto/' "$_file_config_apticron""
+	_cmd_text="Ajout du destinataire dans le fichier $_file_config_apticron..."
+	f_cmd "$_cmd" "$_cmd_text"	
+fi
+
+########################################################################
 # MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
 printf "\n%s\n" "MISE EN PLACE DES TÂCHES PLANIFIÉES"

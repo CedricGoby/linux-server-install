@@ -9,8 +9,8 @@ msmtp-mta
 ufw
 fail2ban
 logwatch
+apticron
 certbot
 #mysecureshell
-#apticron
 #-- Containers --#
 docker-ce
