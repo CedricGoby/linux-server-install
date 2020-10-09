@@ -505,7 +505,7 @@ fi
 ########################################################################
 # INSTALLATION D'APACHE (reverse proxy)
 ########################################################################
-printf "\n%s" "Souhaitez-vous installer apache (reverse proxy SSL) ? (yYoO / nN)"
+printf "\n%s" "Souhaitez-vous installer apache ? (yYoO / nN)"
 
 read choice
 	case $choice in
