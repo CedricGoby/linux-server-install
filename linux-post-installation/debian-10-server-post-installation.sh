@@ -658,22 +658,18 @@ if f_check_for_package "$_package"; then
 	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Prompt utilisateur
 	read -p "Destinataire apticron : " _mailto
+	read -p "Expéditeur apticron : " _mailfrom
 
 	if [ ! -f "$_file_config_apticron" ]; then
-	# Création du fichier
-	_cmd="touch "$_file_config_apticron""
-	_cmd_text="Création du fichier $_file_config_apticron..."
+	# Copie du fichier de configuration
+	_cmd="cp "$_src_config_apticron" "$_file_config_apticron""
+	_cmd_text="Copie du fichier de configuration $_file_config_apticron..."
 	f_cmd "$_cmd" "$_cmd_text"
 	# Modification du fichier
-	_cmd='echo -e "EMAIL="$_mailto"" >> $_file_config_apticron'
+	_cmd="sed -i -e 's/EMAIL="root"/EMAIL="root=\"$_mailto\"/"' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM=\"$_mailfrom\"/'" "$_file_config_apticron"
 	_cmd_text="Ajout du destinataire dans le fichier $_file_config_apticron..."
-	f_cmd "$_cmd" "$_cmd_text"	
+	f_cmd "$_cmd" "$_cmd_text"
 	fi
-
-	# Modification du fichier
-	_cmd="sed -i 's/mail@domain.com/$_mailto/' "$_file_config_apticron""
-	_cmd_text="Ajout du destinataire dans le fichier $_file_config_apticron..."
-	f_cmd "$_cmd" "$_cmd_text"	
 fi
 
 ########################################################################
