@@ -490,21 +490,19 @@ EOF
 	
 	# Mise en place des logs
 	f_log_setup "$_package"
+
+	# Modification du fichier /etc/aliases
+	_cmd="echo "root: $_email_from" >> /etc/aliases"
+	_cmd_text="Modification du fichier /etc/aliases..."
+	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
 	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
 	_cmd_text="Test du MTA $_package..."
-	f_cmd "$_cmd" "$_cmd_text"	
-fi
-
-########################################################################
-# CONFIGURATION ALIASES
-########################################################################
-	# Modification du fichier /etc/aliases
-	_cmd="echo "root: $_email_from" >> /etc/aliases"
-	_cmd_text="Modification du fichier /etc/aliases..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+fi
 
 ########################################################################
 # INSTALLATION D'APACHE (reverse proxy)
@@ -666,10 +664,15 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Copie du fichier de configuration $_file_config_apticron..."
 	f_cmd "$_cmd" "$_cmd_text"
 	# Modification du fichier
-	_cmd="sed -i -e 's/EMAIL="root"/EMAIL="root=\"$_mailto\"/"' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM=\"$_mailfrom\"/'" "$_file_config_apticron"
-	_cmd_text="Ajout du destinataire dans le fichier $_file_config_apticron..."
+	_cmd="sed -i -e 's/EMAIL="root"/EMAIL=\"$_mailto\"/' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM=\"$_mailfrom\"/' "$_file_config_apticron""
+	_cmd_text="Ajout du destinataire et de l'expéditeur dans le fichier $_file_config_apticron..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
+
+	# Envoi du mail apticron
+	_cmd="apticron"
+	_cmd_text="Envoi du mail apticron..."
+	f_cmd "$_cmd" "$_cmd_text"
 fi
 
 ########################################################################
