@@ -492,19 +492,17 @@ EOF
 	f_log_setup "$_package"
 
 	# Modification du fichier /etc/aliases
-	_cmd="echo "root: $_email_from" > /etc/aliases"
-	_cmd_text="Modification du fichier /etc/aliases..."
-	f_cmd "$_cmd" "$_cmd_text"
-
 	if [ ! -f /etc/aliases ]; then
 	# Création du fichier /etc/aliases
+	touch /etc/aliases	
+	# Ajout de l'expéditeur
 	_cmd="echo "root: $_email_from" > /etc/aliases"
 	_cmd_text="Création du fichier /etc/aliases, ajout de l'expéditeur..."
 	f_cmd "$_cmd" "$_cmd_text"
 	else
-	# Modification du fichier
+	# Modification du fichier /etc/aliases existant
 	_cmd="echo "root: $_email_from" >> /etc/aliases"
-	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases..."
+	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases existant..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
 	
@@ -666,27 +664,29 @@ _package="apticron"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
 	printf "\n%s\n" "CONFIGURATION DE "$_package""
-	# Prompt utilisateur
-	read -p "Destinataire apticron : " _mailto
-	read -p "Expéditeur apticron : " _mailfrom
 
+	# Si le fichier /etc/apticron/apticron.conf n'existe pas
 	if [ ! -f "$_file_config_apticron" ]; then
-	# Copie du fichier de configuration
-	_cmd="cp "$_src_config_apticron" "$_file_config_apticron""
-	_cmd_text="Copie du fichier de configuration $_file_config_apticron..."
-	f_cmd "$_cmd" "$_cmd_text"
-	# Modification du fichier
-	_cmd="sed -i -e 's/EMAIL="root"/EMAIL="$_mailto"/' -e 's/# CUSTOM_FROM=""/CUSTOM_FROM="$_mailfrom"/' "$_file_config_apticron""
-	_cmd_text="Ajout du destinataire et de l'expéditeur dans le fichier $_file_config_apticron..."
-	f_cmd "$_cmd" "$_cmd_text"
+		# Prompt utilisateur
+		read -p "Destinataire apticron : " _mailto
+		read -p "Expéditeur apticron : " _mailfrom
+		# Création du fichier /etc/apticron/apticron.conf
+		cmd=$(cat >"$_file_config_apticron" <<	EOF
+EMAIL="$_mailto"
+CUSTOM_FROM="$_mailfrom"
+EOF
+)
+		_cmd_text="Création du fichier /etc/apticron/apticron.conf..."
+		f_cmd "$_cmd" "$_cmd_text"
+
 	fi
 
-	# Envoi du mail apticron
-	_cmd="apticron"
-	_cmd_text="Envoi du mail apticron..."
-	f_cmd "$_cmd" "$_cmd_text"
-fi
+# Envoi du mail apticron
+_cmd="apticron"
+_cmd_text="Envoi du mail apticron..."
+f_cmd "$_cmd" "$_cmd_text"
 
+fi
 ########################################################################
 # MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
