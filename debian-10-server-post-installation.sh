@@ -482,12 +482,23 @@ EOF
 	-e 's/^tls_certcheck$/tls_certcheck "$_tls_cert_check"/' \
 	-e 's/^from$/from "$_email_from"/' \
 	-e 's/^user$/user "$_login"/' \
+	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' \
 	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Mise en place des logs
 	f_log_setup "$_package"
+
+	# Création du fichier /etc/aliases.msmtp
+	# Ajout de l'expéditeur
+	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
+root: $_email_from
+EOF
+)
+	_cmd_text="Création du fichier /etc/aliases.msmtp, ajout de l'expéditeur..."
+	f_cmd "$_cmd" "$_cmd_text"
+	fi
 
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
@@ -633,14 +644,6 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Modification du fichier "$_file_config_logwatch"..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Modification du fichier /etc/aliases
-	# (Ce fichier est créé lors de l'installation de logwatch)
-	# Ajout de l'expéditeur
-	_cmd="echo -e "root: $_mailfrom" >> /etc/aliases"
-	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases..."
-	f_cmd "$_cmd" "$_cmd_text"
-	fi
-	
 	# Envoi du mail logwatch
 	_cmd="logwatch --detail 5"
 	_cmd_text="Envoi du mail logwatch..."

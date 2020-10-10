@@ -19,5 +19,7 @@ from
 user
 # [password]
 password
+# [aliases]
+aliases
 # Logfile
 logfile /var/log/msmtp
