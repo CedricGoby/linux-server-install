@@ -488,6 +488,7 @@ EOF
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 
+	# Création du fichier /etc/aliases.msmtp
 	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
 root: $_mailfrom
 EOF
