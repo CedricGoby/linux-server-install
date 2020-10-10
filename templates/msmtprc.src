@@ -1,0 +1,23 @@
+# /etc/msmtprc
+# Fichier de configuration globale pour msmtp
+
+# [compte]
+account default
+# [adresse_du_serveur]
+host
+# [port]
+port
+# [authentification]
+auth
+# Si vous utilisez TLS/SSL, ajoutez :
+tls
+# Si vous n'avez pas le certificat de la CA, vous pouvez ignorer la vérification du certificat en mettant :
+tls_certcheck
+# [adresse_email]
+from
+# [login]
+user
+# [password]
+password
+# Logfile
+logfile /var/log/msmtp

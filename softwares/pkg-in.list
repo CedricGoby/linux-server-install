@@ -1,0 +1,16 @@
+## Liste de paquets à installer avec apt (un paquet par ligne)
+## Commenter avec # pour ne pas traiter un paquet
+#
+#-- EMAILS --#
+mailutils
+msmtp
+msmtp-mta
+#-- SECURITE --#
+ufw
+fail2ban
+logwatch
+apticron
+certbot
+#mysecureshell
+#-- Containers --#
+docker-ce

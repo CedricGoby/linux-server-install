@@ -1,0 +1,15 @@
+# Liste de programmes à télécharger puis à installer (un paquet par ligne)
+# Commenter avec # pour ne pas traiter un paquet
+# Séparateur de colonne : tab
+# Colonne 1 : nom du paquet
+# Colonne 2 : URL du paquet
+# Colonne 3 : Programme de vérification
+# Colonne 4 : Somme de contrôle
+# Colonne 5 : Type de fichier
+#
+# R Studio
+#rstudio-1.0.153-amd64.deb	https://download1.rstudio.org/rstudio-xenial-1.0.153-amd64.deb	md5sum	d584cbab01041777a15d62cbef69a976
+# Veracrypt
+#veracrypt-1.21-setup.tar.bz2	https://launchpad.net/veracrypt/trunk/1.21/+download/veracrypt-1.21-setup.tar.bz2 sha512sum	367f9c86e4106ed6589e256a89b4c6b75badcc22a37906182dfcb5dacf12a7b513a447a86b14384105295be2f7199d545e359c1edd468dc44c34639f63957a34
+# Docker Compose
+# docker-compose	https://github.com/docker/compose/releases/download/1.27.4/docker-compose-Linux-x86_64	sha256sum	04216d65ce0cd3c27223eab035abfeb20a8bef20259398e3b9d9aa8de633286d	binary
