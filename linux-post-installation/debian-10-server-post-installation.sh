@@ -4,7 +4,6 @@
 # Installation et/ou paramétrage de logiciels.
 # Usage : 
 # git clone https://gitlab.com/CedricGoby/linux-server-install
-# cd linux-server-install
 # ./debian-10-server-post-install.sh
 # Licence : GPL-3+
 # Auteur : Cédric Goby
