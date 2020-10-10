@@ -482,7 +482,7 @@ EOF
 	-e 's/^tls_certcheck$/tls_certcheck "$_tls_cert_check"/' \
 	-e 's/^from$/from "$_mailfrom"/' \
 	-e 's/^user$/user "$_login"/' \
-	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' \
+	-e 's-^aliases$-aliases "$_file_aliases_msmtp"-' \
 	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
