@@ -490,13 +490,12 @@ EOF
 	# Mise en place des logs
 	f_log_setup "$_package"
 
-	# Création du fichier /etc/aliases.msmtp
-	# Ajout de l'expéditeur
+	# Création du fichier /etc/aliases.msmtp et ajout de l'expéditeur
 	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
 root: $_mailfrom
 EOF
 )
-	_cmd_text="Création du fichier /etc/aliases.msmtp, ajout de l'expéditeur..."
+	_cmd_text="Création du fichier /etc/aliases.msmtp et ajout de l'expéditeur..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
 
