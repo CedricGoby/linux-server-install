@@ -495,7 +495,6 @@ EOF
 	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
 	_cmd_text="Test du MTA $_package..."
 	f_cmd "$_cmd" "$_cmd_text"
-
 fi
 
 ########################################################################
