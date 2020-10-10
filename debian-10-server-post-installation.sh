@@ -101,7 +101,6 @@ EOF
 )
 	_cmd_text="Modification du fichier bashrc..."
 	f_cmd "$_cmd" "$_cmd_text"
-
 fi
 
 ########################################################################
