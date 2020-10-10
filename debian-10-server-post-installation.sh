@@ -473,6 +473,7 @@ EOF
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
+	_file_aliases_msmtp="$(<<< "$_file_aliases_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
 
 	# Modification du fichier /etc/msmtprc
 	_cmd="sed -i -e 's/^host/host "$_host"/' \
@@ -483,20 +484,12 @@ EOF
 	-e 's/^from$/from "$_mailfrom"/' \
 	-e 's/^user$/user "$_login"/' \
 	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' \
-	-e 's-^aliases$-aliases /etc/aliases.msmtp-' "$_file_config_msmtp""
+	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
 	# Mise en place des logs
 	f_log_setup "$_package"
-
-	# Création du fichier /etc/aliases.msmtp et ajout de l'expéditeur
-	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
-root: $_mailfrom
-EOF
-)
-	_cmd_text="Création du fichier /etc/aliases.msmtp et ajout de l'expéditeur..."
-	f_cmd "$_cmd" "$_cmd_text"
 
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
