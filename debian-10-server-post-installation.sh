@@ -444,7 +444,7 @@ EOF
 	read -p "Authentification (on - off) : " _authentication
 	read -p "TLS (on - off) : " _tls
 	read -p "TLS cert check (on - off) : " _tls_cert_check
-	read -p "Adresse email (from) : " _email_from
+	read -p "Adresse email (from) : " _mailfrom
 	read -p "login SMTP : " _login
 
 	# Soumission du mot de passe SMTP
@@ -480,7 +480,7 @@ EOF
 	-e 's/^auth$/auth "$_authentication"/' \
 	-e 's/^tls$/tls "$_tls"/' \
 	-e 's/^tls_certcheck$/tls_certcheck "$_tls_cert_check"/' \
-	-e 's/^from$/from "$_email_from"/' \
+	-e 's/^from$/from "$_mailfrom"/' \
 	-e 's/^user$/user "$_login"/' \
 	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' \
 	-e 's/^password$/passwordeval gpg --no-tty -q -d "$_file_passwd_msmtp"/' "$_file_config_msmtp""
@@ -493,7 +493,7 @@ EOF
 	# Création du fichier /etc/aliases.msmtp
 	# Ajout de l'expéditeur
 	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
-root: $_email_from
+root: $_mailfrom
 EOF
 )
 	_cmd_text="Création du fichier /etc/aliases.msmtp, ajout de l'expéditeur..."
@@ -664,7 +664,7 @@ if f_check_for_package "$_package"; then
 		read -p "Destinataire apticron : " _mailto
 		read -p "Expéditeur apticron : " _mailfrom
 		# Création du fichier /etc/apticron/apticron.conf
-		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même sans mise à jour disponible
+		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même si aucune mise à jour n'est disponible
 		_cmd=$(cat >"$_file_config_apticron" <<	EOF
 EMAIL="$_mailto"
 CUSTOM_FROM="$_mailfrom"
