@@ -90,7 +90,7 @@ f_cmd "$_cmd" "$_cmd_text"
 if [ ! -f ~/.bash_aliases ]; then
 	# Copie du fichier modèle ~/.bash_aliases
 	_cmd="cp "$_src_bash_aliases" "$_file_bash_aliases""
-	_cmd_text="Copie du fichier de bash aliases..."
+	_cmd_text="Copie du fichier .bash_aliases..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Modification du fichier ~/.bashrc
@@ -501,7 +501,7 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 	else
 	# Modification du fichier /etc/aliases existant
-	_cmd="echo "root: $_email_from" >> /etc/aliases"
+	_cmd="echo -e "root: $_email_from" >> /etc/aliases"
 	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases existant..."
 	f_cmd "$_cmd" "$_cmd_text"
 	fi
@@ -650,6 +650,14 @@ if f_check_for_package "$_package"; then
 	-e 's/Output = stdout/Output = mail/' "$_file_config_logwatch""
 	_cmd_text="Modification du fichier "$_file_config_logwatch"..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+	# Modification du fichier /etc/aliases
+	# (Ce fichier est créé lors de l'installation de logwatch)
+	# Ajout de l'expéditeur
+	_cmd="echo -e "root: $_mailfrom" >> /etc/aliases"
+	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases..."
+	f_cmd "$_cmd" "$_cmd_text"
+	fi
 	
 	# Envoi du mail logwatch
 	_cmd="logwatch --detail 5"
