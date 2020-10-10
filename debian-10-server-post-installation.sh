@@ -487,7 +487,14 @@ EOF
 	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
+	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
+root: $_mailfrom
+EOF
+)
+	_cmd_text="Création du fichier $_file_aliases_msmtp..."
+	f_cmd "$_cmd" "$_cmd_text"	
+
 	# Mise en place des logs
 	f_log_setup "$_package"
 
