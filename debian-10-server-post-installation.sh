@@ -469,6 +469,14 @@ EOF
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+	# Création du fichier /etc/aliases.msmtp
+	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
+root: $_mailfrom
+EOF
+)
+	_cmd_text="Création du fichier $_file_aliases_msmtp..."
+	f_cmd "$_cmd" "$_cmd_text"
 		
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
@@ -487,14 +495,6 @@ EOF
 	-e 's/^aliases$/aliases "$_file_aliases_msmtp"/' "$_file_config_msmtp""
 	_cmd_text="Modification du fichier "$_file_config_msmtp"..."
 	f_cmd "$_cmd" "$_cmd_text"
-
-	# Création du fichier /etc/aliases.msmtp
-	_cmd=$(cat >"$_file_aliases_msmtp" <<	EOF
-root: $_mailfrom
-EOF
-)
-	_cmd_text="Création du fichier $_file_aliases_msmtp..."
-	f_cmd "$_cmd" "$_cmd_text"	
 
 	# Mise en place des logs
 	f_log_setup "$_package"
