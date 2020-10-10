@@ -491,21 +491,6 @@ EOF
 	# Mise en place des logs
 	f_log_setup "$_package"
 
-	# Modification du fichier /etc/aliases
-	if [ ! -f /etc/aliases ]; then
-	# Création du fichier /etc/aliases
-	touch /etc/aliases	
-	# Ajout de l'expéditeur
-	_cmd="echo "root: $_email_from" > /etc/aliases"
-	_cmd_text="Création du fichier /etc/aliases, ajout de l'expéditeur..."
-	f_cmd "$_cmd" "$_cmd_text"
-	else
-	# Modification du fichier /etc/aliases existant
-	_cmd="echo -e "root: $_email_from" >> /etc/aliases"
-	_cmd_text="Ajout de l'expéditeur dans le fichier /etc/aliases existant..."
-	f_cmd "$_cmd" "$_cmd_text"
-	fi
-	
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
 	_cmd="ls -la /usr/sbin/sendmail 2>/dev/null | grep -q "$_package""
@@ -679,22 +664,24 @@ if f_check_for_package "$_package"; then
 		read -p "Destinataire apticron : " _mailto
 		read -p "Expéditeur apticron : " _mailfrom
 		# Création du fichier /etc/apticron/apticron.conf
+		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même sans mise à jour disponible
 		_cmd=$(cat >"$_file_config_apticron" <<	EOF
 EMAIL="$_mailto"
 CUSTOM_FROM="$_mailfrom"
+NOTIFY_NO_UPDATES="1"
+CUSTOM_SUBJECT=" $(hostname) $(hostname -I) [logwatch] - $SYSTEM: $NUM_PACKAGES mise(s)-&agrave-jour disponible(s)"
 EOF
 )
 		_cmd_text="Création du fichier /etc/apticron/apticron.conf..."
 		f_cmd "$_cmd" "$_cmd_text"
-
 	fi
 
 # Envoi du mail apticron
 _cmd="apticron"
 _cmd_text="Envoi du mail apticron..."
 f_cmd "$_cmd" "$_cmd_text"
-
 fi
+
 ########################################################################
 # MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
