@@ -496,7 +496,6 @@ EOF
 )
 	_cmd_text="Création du fichier /etc/aliases.msmtp et ajout de l'expéditeur..."
 	f_cmd "$_cmd" "$_cmd_text"
-	fi
 
 	# Test du MTA
 	printf "\n%s\n" "Test du MTA"
