@@ -11,4 +11,4 @@ Scripts d'installation pour des serveurs Linux.
 ## Scripts
 
 ### debian-10-server-post-installation.sh
-Opérations de post installation pour Debian 10 : Installation et configuration de logiciels.
+Ce script interactif permet de sélectionner, d'installer et de configurer différents logiciels après l'installation initiale de Debian : ufw, fail2ban, logwatch, apticron, msmtp, certbot, apache2, docker-ce...  
