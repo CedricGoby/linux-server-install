@@ -128,8 +128,8 @@ printf "\n%s" "Souhaitez-vous copier une clé publique pour l'accès SSH ? (yYoO
 
 read choice
 	case $choice in
-		[yYoO]*) read -p "Utilisateur machine distante : " _user
-			read -p "Clé publique SSH : " _public_key
+		[yYoO]*) read -rs -p "Utilisateur machine distante : " _user
+			read -rs -p "Clé publique SSH : " _public_key
 			# Si le répertoire .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
 			if [ ! -d "$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
@@ -557,8 +557,8 @@ read choice
 
 			# Création du certificat SSL (Wildcard)
 			printf "\n%s\n" "Création du certificat SSL Let's Encrypt"
-			read -p "Domaine du certificat SSL : " _domain
-			read -p "Email attaché au certificat SSL : " _email_letsencrypt
+			read -rs -p "Domaine du certificat SSL : " _domain
+			read -rs -p "Email attaché au certificat SSL : " _email_letsencrypt
 			_cmd="certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "$_domain" >> "$_file_logs""
 			_cmd_text="Création du certificat SSL Let's Encrypt pour "$_domain"..."
 			f_cmd "$_cmd" "$_cmd_text"			
@@ -661,8 +661,8 @@ if f_check_for_package "$_package"; then
 	# Si le fichier /etc/apticron/apticron.conf n'existe pas
 	if [ ! -f "$_file_config_apticron" ]; then
 		# Prompt utilisateur
-		read -p "Destinataire apticron : " _mailto
-		read -p "Expéditeur apticron : " _mailfrom
+		read -rs -p "Destinataire apticron : " _mailto
+		read -rs -p "Expéditeur apticron : " _mailfrom
 		# Création du fichier /etc/apticron/apticron.conf
 		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même si aucune mise à jour n'est disponible
 		_cmd=$(cat >"$_file_config_apticron" <<	EOF
