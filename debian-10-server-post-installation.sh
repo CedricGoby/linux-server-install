@@ -634,8 +634,8 @@ _package="logwatch"
 if f_check_for_package "$_package"; then
 	printf "\n%s\n" "CONFIGURATION DE "$_package""
 	# Prompt utilisateur
-	read -p "Destinataire logwatch : " _mailto
-	read -p "Expéditeur logwatch : " _mailfrom
+	read -r -p "Destinataire logwatch : " _mailto
+	read -r -p "Expéditeur logwatch : " _mailfrom
 
 	# Modification du fichier /usr/share/logwatch/default.conf/logwatch.conf
 	_cmd="sed -i -e 's/MailTo = root/MailTo = "$_mailto"/' \
@@ -661,8 +661,8 @@ if f_check_for_package "$_package"; then
 	# Si le fichier /etc/apticron/apticron.conf n'existe pas
 	if [ ! -f "$_file_config_apticron" ]; then
 		# Prompt utilisateur
-		read -rs -p "Destinataire apticron : " _mailto
-		read -rs -p "Expéditeur apticron : " _mailfrom
+		read -r -p "Destinataire apticron : " _mailto
+		read -r -p "Expéditeur apticron : " _mailfrom
 		# Création du fichier /etc/apticron/apticron.conf
 		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même si aucune mise à jour n'est disponible
 		_cmd=$(cat >"$_file_config_apticron" <<	EOF
