@@ -127,7 +127,7 @@ f_submit_secure_password() {
 	    read -rs -p "Confirmation du mot de passe : " _password_confirm
 	    echo
 		
-	    if [[ $_password = $_password_confirm ]]
+	    if [[ "$_password" = "$_password_confirm" ]]
 	    then
 	        len_pass=${#_password}
 	        test_pass=${_password#?}
