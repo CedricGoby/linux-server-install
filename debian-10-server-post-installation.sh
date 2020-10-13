@@ -393,7 +393,7 @@ if f_check_for_package "$_package"; then
 
 	# création d'un fichier temporaire supprimé à la sortie du script
 	trap 'rm -f "$_file_temp_gpg_password"' EXIT
-	_file_temp=$(mktemp) || exit 1
+	_file_temp_gpg_password=$(mktemp) || exit 1
 	
 	# Création du fichier d'options pour les clés gpg
 	cmd=$(cat >$_file_temp_gpg_password <<	EOF
