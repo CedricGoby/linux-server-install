@@ -122,9 +122,9 @@ f_submit_secure_password() {
 	    begin=false
 		
 		printf "%s\n" "Entrez le mot de passe (12 à 25 caractères avec obligatoirement 1 chiffre, 1 majuscule, 1 minuscule, 1 caractère spécial)"
-	    read -s -p "Mot de passe : " _password
+	    read -rs -p "Mot de passe : " _password
 	    echo
-	    read -s -p "Confirmation du mot de passe : " _password_confirm
+	    read -rs -p "Confirmation du mot de passe : " _password_confirm
 	    echo
 		
 	    if [[ $_password = $_password_confirm ]]
@@ -151,9 +151,9 @@ f_submit_password() {
 	    $again && echo "Les mots de passe ne sont pas identiques. Veuillez réessayer." || again=true
 	    begin=false
 		
-	    read -s -p "Mot de passe : " _password
+	    read -rs -p "Mot de passe : " _password
 	    echo
-	    read -s -p "Confirmation du mot de passe : " _password_confirm
+	    read -rs -p "Confirmation du mot de passe : " _password_confirm
 	    echo
 		
 	    if [[ $_password != $_password_confirm ]]
