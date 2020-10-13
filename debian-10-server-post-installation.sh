@@ -83,6 +83,29 @@ _cmd_text="Mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
+# INSTALLATION DE LOGICIELS PRÉ-REQUIS
+########################################################################
+printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
+# Liste des programmes pré-requis
+_required_packages=(software-properties-common \
+	dirmngr \
+	apt-transport-https \
+	lsb-release \
+	ca-certificates \
+	mailutils \
+	msmtp \
+	msmtp-mta \
+	acl \
+	curl \
+	gnupg \
+	keychain
+)
+# On installe chaque programme de la liste
+for _required_package_name in "${_required_packages[@]}"; do
+	f_install_package "$_required_package_name"
+done
+
+########################################################################
 # MISE EN PLACE DU FICHIER BASH ALIASES
 ########################################################################
 # Vérification de l'absence du fichier ~/.bash_aliases
@@ -102,22 +125,6 @@ EOF
 	_cmd_text="Modification du fichier bashrc..."
 	f_cmd "$_cmd" "$_cmd_text"
 fi
-
-########################################################################
-# INSTALLATION DE LOGICIELS PRÉ-REQUIS
-########################################################################
-printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
-_cmd="apt-get -y install software-properties-common \
-	dirmngr \
-	apt-transport-https \
-	lsb-release \
-	ca-certificates \
-	acl \
-	curl \
-	keychain \
-	gnupg >/dev/null 2>>"$_file_logs""
-_cmd_text="Installation des logiciels pré-requis..."
-f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
 # COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH

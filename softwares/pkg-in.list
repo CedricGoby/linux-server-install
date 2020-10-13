@@ -2,9 +2,6 @@
 ## Commenter avec # pour ne pas traiter un paquet
 #
 #-- EMAILS --#
-mailutils
-msmtp
-msmtp-mta
 #-- SECURITE --#
 ufw
 fail2ban
