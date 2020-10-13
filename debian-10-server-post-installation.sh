@@ -393,7 +393,7 @@ if f_check_for_package "$_package"; then
 
 	# création d'un fichier temporaire supprimé à la sortie du script
 	trap 'rm -f "$_file_temp_gpg_password"' EXIT
-	_file_temp_gpg_password=$(mktemp) || exit 1
+	_file_temp=$(mktemp) || exit 1
 	
 	# Création du fichier d'options pour les clés gpg
 	cmd=$(cat >$_file_temp_gpg_password <<	EOF
@@ -412,7 +412,7 @@ if f_check_for_package "$_package"; then
      %echo done
 EOF
 )
-	_cmd_text="Création du fichier d'options pour les clés gpg $_file_temp..."
+	_cmd_text="Création du fichier d'options pour les clés gpg $_file_temp_gpg_password..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Génération de la paire de clés (lance également l'agent GPG)
@@ -457,14 +457,10 @@ EOF
 	# Soumission du mot de passe SMTP
 	printf "\n%s\n" "Mot de passe pour le compte SMTP "$_login""
 	f_submit_password
-	
-	# création d'un fichier temporaire supprimé à la sortie du script
-	trap 'rm -f "$_file_temp_smtp_password"' EXIT
-	_file_temp_smtp_password=$(mktemp) || exit 1	
-	
-	# Copie du mot de passe SMTP dans le fichier temporaire
+
+	# Copie du mot de passe SMTP dans un fichier temporaire
 	printf "\n%s\n" "Copie du mot de passe SMTP dans un fichier temporaire"
-	_cmd="echo "$_password" > $_file_temp_smtp_password"
+	_cmd="echo "$_password" > /etc/.msmtp-password"
 	_cmd_text="Copie du mot de passe SMTP dans un fichier temporaire..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
@@ -472,8 +468,13 @@ EOF
 	# GPG doit savoir qui va ouvrir le fichier et qui l'envoi. Puisque le fichier est pour vous,
 	# il est inutile de spécifier un expéditeur, et vous êtes le destinataire.
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
-	_cmd="gpg -e -r "$_login" $_file_temp_smtp_password"
-	_cmd_text="Chiffrement du fichier de mot de passe SMTP $_file_temp_smtp_password..."
+	_cmd="gpg -e -r "$_login" /etc/.msmtp-password"
+	_cmd_text="Chiffrement du fichier de mot de passe SMTP..."
+	f_cmd "$_cmd" "$_cmd_text"
+	
+	# Suppression du fichier temporaire contenant le mot de passe SMTP
+	_cmd="rm /etc/.msmtp-password"
+	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Création du fichier /etc/aliases.msmtp
