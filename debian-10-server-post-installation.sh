@@ -416,7 +416,7 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Génération de la paire de clés (lance également l'agent GPG)
-	_cmd="gpg --batch --generate-key $_file_temp"
+	_cmd="gpg --batch --generate-key $_file_temp_gpg_password"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
 
