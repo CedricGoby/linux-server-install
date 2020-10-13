@@ -462,7 +462,7 @@ EOF
 	trap 'rm -f "$_file_temp_smtp_password"' EXIT
 	_file_temp_smtp_password=$(mktemp) || exit 1	
 	
-	# Copie du mot de passe SMTP dans un fichier temporaire
+	# Copie du mot de passe SMTP dans le fichier temporaire
 	printf "\n%s\n" "Copie du mot de passe SMTP dans un fichier temporaire"
 	_cmd="echo "$_password" > $_file_temp_smtp_password"
 	_cmd_text="Copie du mot de passe SMTP dans un fichier temporaire..."
