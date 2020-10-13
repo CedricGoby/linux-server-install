@@ -396,7 +396,7 @@ if f_check_for_package "$_package"; then
 	_file_temp_gpg_password=$(mktemp) || exit 1
 	
 	# Création du fichier d'options pour les clés gpg
-	cmd=$(cat >$_file_temp <<	EOF
+	cmd=$(cat >$_file_temp_gpg_password <<	EOF
      %echo Generating an OpenPGP key
      Key-Type: RSA
      Key-Length: 3072
