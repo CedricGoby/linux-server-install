@@ -381,19 +381,23 @@ if f_check_for_package "$_package"; then
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
 	# Définition du nom et du mot de passe pour la clé
 	printf "\n%s\n" "CRÉATION D'UNE PAIRE DE CLÉS GPG"
-	read -p "Email (sera également utilisé comme Real Name) : " _email_gpg_key
+	read -r -p "Email (sera également utilisé comme Real Name) : " _realname_gpg_key
 	f_submit_password
+
+	# création d'un fichier temporaire supprimé à la sortie du script
+	trap 'rm -f "$_file_temp"' EXIT
+	_file_temp=$(mktemp)|| exit 1
 	
-	# Création du fichier key_options pour la génération de la paire de clés
-	cmd=$(cat >key_options <<	EOF
+	# Création du fichier d'options pour les clés gpg
+	cmd=$(cat >$_file_temp <<	EOF
      %echo Generating an OpenPGP key
      Key-Type: RSA
      Key-Length: 3072
      Subkey-Type: RSA
      Subkey-Length: 3072
-     Name-Real: $_email_gpg_key
+     Name-Real: $_realname_gpg_key
      Name-Comment: No comment
-     Name-Email: $_email_gpg_key
+     Name-Email: $_realname_gpg_key
      Expire-Date: 0
      Passphrase: $_password
      # Do a commit here, so that we can later print "done"
@@ -401,33 +405,28 @@ if f_check_for_package "$_package"; then
      %echo done
 EOF
 )
-	_cmd_text="Création du fichier key_options..."
+	_cmd_text="Création du fichier d'options pour les clés gpg $_file_temp..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Génération de la paire de clés (lance également l'agent GPG)
-	_cmd="gpg --batch --generate-key key_options"
+	_cmd="gpg --batch --generate-key $_file_temp"
 	_cmd_text="Génération d'une paire de clés pour chiffrer les mots de passe..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Suppression du fichier d'options pour la création de la paire de clés 
-	_cmd="rm key_options"
-	_cmd_text="Suppression du fichier d'options pour la création de la paire de clés..."
+	# Récupération de l'ID de la clé à partir du Real Name
+	_id_gpg_key=$(gpg --list-secret-keys | grep -B 1 "$_realname_gpg_key" | head -n 1 | sed -e 's/^[ \t]*//')
+	# Ajout de la clé dans keychain
+	_cmd="keychain --eval --agents gpg $_id_gpg_key"
+	_cmd_text="Ajout de la clé gpg "$_id_gpg_key" dans keychain..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Rechargement de la configuration de l'agent GPG
-	_cmd="gpgconf --kill gpg-agent"
-	_cmd_text="Arrêt de gpg-agent"
-	f_cmd "$_cmd" "$_cmd_text"
-	sleep 5
-	_cmd="gpg-connect-agent /bye"
-	_cmd_text="Démarrage de gpg-agent"
-	f_cmd "$_cmd" "$_cmd_text"
-	sleep 5
-
-	# Enregistrement du mot de passe de la clé avec gpg-preset-passphrase
-	_keygrip_gpg_key=$(gpg --list-secret-keys --with-keygrip | sed -n '8 p' | awk -F'= ' '{print $2}')
-	_cmd="/usr/lib/gnupg2/gpg-preset-passphrase -c "$_keygrip_gpg_key" <<< '$_password'"
-	_cmd_text="Enregistrement de la clé avec gpg-agent"
+	# Modification du fichier .bashrc pour keychain
+	cmd=$(cat >> ~/.bashrc <<EOF
+keychain --eval --agents gpg $_id_gpg_key
+source \$HOME/.keychain/\$HOSTNAME-sh-gpg
+EOF
+)
+	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
@@ -440,13 +439,13 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 	printf "\n%s\n" "Paramètres de configuration pour "$_package""
 	# Variables de configuration ssmtp
-	read -p "Serveur SMTP : " _host
-	read -p "Port SMTP : " _port
-	read -p "Authentification (on - off) : " _authentication
-	read -p "TLS (on - off) : " _tls
-	read -p "TLS cert check (on - off) : " _tls_cert_check
-	read -p "Adresse email (from) : " _mailfrom
-	read -p "login SMTP : " _login
+	read -r -p "Serveur SMTP : " _host
+	read -r -p "Port SMTP : " _port
+	read -r -p "Authentification (on - off) : " _authentication
+	read -r -p "TLS (on - off) : " _tls
+	read -r -p "TLS cert check (on - off) : " _tls_cert_check
+	read -r -p "Adresse email (from) : " _mailfrom
+	read -r -p "login SMTP : " _login
 
 	# Soumission du mot de passe SMTP
 	printf "\n%s\n" "Mot de passe pour le compte SMTP "$_login""
