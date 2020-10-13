@@ -392,8 +392,8 @@ if f_check_for_package "$_package"; then
 	f_submit_password
 
 	# création d'un fichier temporaire supprimé à la sortie du script
-	trap 'rm -f "$_file_temp"' EXIT
-	_file_temp=$(mktemp)|| exit 1
+	trap 'rm -f "$_file_temp_gpg_password"' EXIT
+	_file_temp_gpg_password=$(mktemp) || exit 1
 	
 	# Création du fichier d'options pour les clés gpg
 	cmd=$(cat >$_file_temp <<	EOF
@@ -458,9 +458,13 @@ EOF
 	printf "\n%s\n" "Mot de passe pour le compte SMTP "$_login""
 	f_submit_password
 	
+	# création d'un fichier temporaire supprimé à la sortie du script
+	trap 'rm -f "$_file_temp_smtp_password"' EXIT
+	_file_temp_smtp_password=$(mktemp) || exit 1	
+	
 	# Copie du mot de passe SMTP dans un fichier temporaire
 	printf "\n%s\n" "Copie du mot de passe SMTP dans un fichier temporaire"
-	_cmd="echo "$_password" > /etc/.msmtp-password"
+	_cmd="echo "$_password" > $_file_temp_smtp_password"
 	_cmd_text="Copie du mot de passe SMTP dans un fichier temporaire..."
 	f_cmd "$_cmd" "$_cmd_text"
 	
@@ -468,13 +472,8 @@ EOF
 	# GPG doit savoir qui va ouvrir le fichier et qui l'envoi. Puisque le fichier est pour vous,
 	# il est inutile de spécifier un expéditeur, et vous êtes le destinataire.
 	printf "\n%s\n" "Chiffrement du fichier de mot de passe SMTP"
-	_cmd="gpg -e -r "$_login" /etc/.msmtp-password"
-	_cmd_text="Chiffrement du fichier de mot de passe SMTP..."
-	f_cmd "$_cmd" "$_cmd_text"
-	
-	# Suppression du fichier temporaire contenant le mot de passe SMTP
-	_cmd="rm /etc/.msmtp-password"
-	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
+	_cmd="gpg -e -r "$_login" $_file_temp_smtp_password"
+	_cmd_text="Chiffrement du fichier de mot de passe SMTP $_file_temp_smtp_password..."
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Création du fichier /etc/aliases.msmtp
@@ -526,7 +525,14 @@ read choice
 
 			printf "\n%s\n" "CONFIGURATION DE "$_package""
 			# Activation de modules
-			_cmd="a2enmod ssl xml2enc proxy rewrite headers proxy_http proxy_wstunnel >/dev/null 2>>"$_file_logs""
+			_cmd="a2enmod \
+			ssl \
+			xml2enc \
+			proxy \
+			rewrite \
+			headers \
+			proxy_http \
+			proxy_wstunnel >/dev/null 2>>"$_file_logs""
 			_cmd_text="Activation de modules "$_package"..."
 			f_cmd "$_cmd" "$_cmd_text"
 
@@ -616,7 +622,8 @@ if f_check_for_package "$_package"; then
 
 	# Configuration de fail2ban avec ufw si ufw est activé
     if grep ENABLED=yes /etc/ufw/ufw.conf>/dev/null; then
-		_cmd="sed -i -e 's/banaction = iptables-multiport/banaction = ufw/' -e 's/banaction_allports = iptables-allports/banaction_allports = ufw/' $_file_config_fail2ban"
+		_cmd="sed -i -e 's/banaction = iptables-multiport/banaction = ufw/' \
+		-e 's/banaction_allports = iptables-allports/banaction_allports = ufw/' $_file_config_fail2ban"
 		_cmd_text="Configuration de fail2ban avec ufw..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
