@@ -156,7 +156,7 @@ f_submit_password() {
 	    read -rs -p "Confirmation du mot de passe : " _password_confirm
 	    echo
 		
-	    if [[ $_password != $_password_confirm ]]
+	    if [[ "$_password" != "$_password_confirm" ]]
 	    then
 	        begin=true
 	    fi
