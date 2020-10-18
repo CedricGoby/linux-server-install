@@ -364,24 +364,26 @@ if f_check_for_package "$_package"; then
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
-	# Création des dossiers et fichiers pour gnupg
+	# Par défaut, quand il est appelé, gpg démarre en mode "supervised" et ne permet pas le cache de clés entre sessions.
+	# On masque gpg pour sytemd afin que gpg démarre en mode "daemon"
+	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
+	_cmd_text="Masquage de gpg pour systemd..."
+	f_cmd "$_cmd" "$_cmd_text"	
+
+	# Premier appel à gpg pour créer les dossiers et fichiers
 	_cmd="gpg --list-keys"
 	_cmd_text="Création des dossiers et fichiers pour gnupg..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Si le fichier gpg-agent.conf n'existe pas on le crée
+	# Si le fichier gpg-agent.conf n'existe pas
 	if [ ! -f "$_file_gpg_conf" ]; then
-		# Chemin si l'utilisateur n'est pas root
-		if [[ $(id -u) != 0 ]]; then
-			_gpg_conf_dir="~/.gnupg"
-			else
-			_gpg_conf_dir="/root/.gnupg"
-		fi
-		_cmd="cp "$_src_config_gpg" "$_gpg_conf_dir"/"$_file_config_gpg""
+		# on le crée
+		_cmd="cp "$_src_config_gpg" "$_file_config_gpg""
 		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
-		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_gpg_conf_dir"/"$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_gpg_conf_dir"/"$_file_config_gpg"..."
+		# on applique les droits
+		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_file_config_gpg""
+		_cmd_text="Application des droits sur "$_gpg_conf_dir" et "$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 
@@ -429,8 +431,7 @@ EOF
 
 	# Modification du fichier .bashrc pour keychain
 	cmd=$(cat >> ~/.bashrc <<EOF
-keychain --eval --agents gpg $_id_gpg_key
-source \$HOME/.keychain/\$HOSTNAME-sh-gpg
+eval $(keychain --eval --agents gpg $_id_gpg_key)
 EOF
 )
 	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
