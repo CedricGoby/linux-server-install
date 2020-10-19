@@ -431,7 +431,7 @@ EOF
 
 	# Modification du fichier .bashrc pour keychain
 	cmd=$(cat >> ~/.bashrc <<EOF
-eval $(keychain --eval --agents gpg $_id_gpg_key)
+eval \$(keychain --eval --agents gpg \$_id_gpg_key)
 EOF
 )
 	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
