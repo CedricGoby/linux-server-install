@@ -382,8 +382,8 @@ if f_check_for_package "$_package"; then
 		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
 		# on applique les droits
-		_cmd="chmod 700 "$_gpg_conf_dir" && chmod 600 "$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_gpg_conf_dir" et "$_file_config_gpg"..."
+		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_config_gpg""
+		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$_file_config_gpg"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 

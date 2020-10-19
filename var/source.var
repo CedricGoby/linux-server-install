@@ -50,6 +50,7 @@ _file_config_msmtp="/etc/msmtprc"
 _file_passwd_msmtp="/etc/.msmtp-password.gpg"
 _file_aliases_msmtp="/etc/aliases.msmtp"
 ## gpg-agent
+_dir_gpg_user="~/.gnupg"
 _file_config_gpg="~/.gnupg/gpg-agent.conf"
 _src_config_gpg="templates/gpg-agent.conf.src"
 ## fail2ban
