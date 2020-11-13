@@ -372,6 +372,8 @@ if f_check_for_package "$_package"; then
 	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
 	_cmd_text="Masquage de gpg pour systemd..."
 	f_cmd "$_cmd" "$_cmd_text"	
+	else
+	printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
     fi
 
 	# Premier appel à gpg pour créer les dossiers et fichiers
