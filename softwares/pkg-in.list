@@ -1,7 +1,8 @@
 ## Liste de paquets à installer avec apt (un paquet par ligne)
 ## Commenter avec # pour ne pas traiter un paquet
 #
-#-- EMAILS --#
+#-- TEXT EDITOR --#
+vim
 #-- SECURITE --#
 ufw
 fail2ban
