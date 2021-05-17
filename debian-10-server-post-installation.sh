@@ -367,8 +367,8 @@ if f_check_for_package "$_package"; then
 
 	# Si gpg démarre en mode "supervised" il ne permet pas le cache de clés entre sessions.
 	# Si c'est le cas on masque gpg pour sytemd afin que gpg démarre en mode "daemon"
-	systemctl --user status gpg-agent >/dev/null
-    if [ $? -eq 3 ]; then
+	systemctl --user status gpg-agent | grep supervised
+    if [ $? -eq 0 ]; then
 	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
 	_cmd_text="Masquage de gpg pour systemd..."
 	f_cmd "$_cmd" "$_cmd_text"	
