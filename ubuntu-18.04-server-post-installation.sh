@@ -52,6 +52,8 @@ fi
 #-----------------------------------------------------------------------
 # Tests de compatibilité du script
 #-----------------------------------------------------------------------
+# Ubuntu server 18.04 LTS (bionic)
+_os_target="bionic"
 # Test de compatibilité du script avec l'OS cible
 if [[ "$_os_current" != "$_os_target" ]]; then
 	printf "\n%s\n%s\n" "[ ERREUR ] --> Le script de post-installation n'est pas compatible avec votre système." "Le script de post-installation est uniquement compatible avec "$_os_target". Arrêt du script !"

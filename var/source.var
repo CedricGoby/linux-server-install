@@ -6,11 +6,6 @@
 _file_logs="log/$(lsb_release -cs)-post-install.log"
 
 ### COMPATIBILITÉ
-# OS compatible avec le script
-# Ubuntu server 18.04 LTS (bionic)
-#_os_target="bionic"
-# Debian 10 server (buster)
-_os_target="buster"
 # OS de l'hôte
 _os_current=$(lsb_release -cs)
 
