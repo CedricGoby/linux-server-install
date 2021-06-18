@@ -98,6 +98,7 @@ for _hold_package_name in "${_hold_packages[@]}"; do
 done
 
 # Liste des programmes pré-requis
+# Attention à l'ordre d'installation des pkg de messagerie
 _required_packages=(software-properties-common \
 	dirmngr \
 	apt-transport-https \
