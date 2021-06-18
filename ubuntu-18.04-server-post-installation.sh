@@ -31,7 +31,7 @@
 ## Journaux
 _file_logs="log/$(lsb_release -cs)-post-install.log"
 
-printf "\n%s\n" "Script de post installation pour Debian 10 server (buster)"
+printf "\n%s\n" "Script de post installation pour Ubuntu 18.04 server (bionic)"
 
 ########################################################################
 # INITIALISATION & TESTS
