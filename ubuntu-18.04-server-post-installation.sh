@@ -103,9 +103,9 @@ _required_packages=(software-properties-common \
 	apt-transport-https \
 	lsb-release \
 	ca-certificates \
-	mailutils \
 	msmtp \
 	msmtp-mta \
+	mailutils \
 	acl \
 	curl \
 	gnupg \
