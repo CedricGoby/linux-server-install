@@ -378,15 +378,29 @@ if f_check_for_package "$_package"; then
 	_cmd_text="Création des dossiers et fichiers pour gnupg..."
 	f_cmd "$_cmd" "$_cmd_text"
 
-	# Si le fichier gpg-agent.conf n'existe pas
+	# Si le fichier gpg.conf n'existe pas
+	# Ubuntu 18.04 LTS with keychain version 2.8.2 and GPG version 2.2.4
+	# Voir https://www.funtoo.org/Keychain
 	if [ ! -f "$_file_gpg_conf" ]; then
 		# on le crée
-		_cmd="cp "$_src_config_gpg" "$_file_config_gpg""
+		_cmd="cp "$_src_config_gpg" "$_file_gpg_conf""
 		_cmd_text="Copie du fichier de configuration pour gpg..."
 		f_cmd "$_cmd" "$_cmd_text"
 		# on applique les droits
-		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$_file_config_gpg"..."
+		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_gpg_conf""
+		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$_file_gpg_conf"..."
+		f_cmd "$_cmd" "$_cmd_text"		
+	fi
+
+	# Si le fichier gpg-agent.conf n'existe pas
+	if [ ! -f "$_file_gpg_agent_conf" ]; then
+		# on le crée
+		_cmd="cp "$_src_config_gpg_agent" "$_file_gpg_agent_conf""
+		_cmd_text="Copie du fichier de configuration pour gpg-agent..."
+		f_cmd "$_cmd" "$_cmd_text"
+		# on applique les droits
+		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_gpg_agent_conf""
+		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$_file_gpg_agent_conf"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 
@@ -426,7 +440,7 @@ EOF
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Récupération de l'ID de la clé à partir du Real Name
-	_id_gpg_key=$(gpg --list-secret-keys | grep -B 1 "$_realname_gpg_key" | head -n 1 | sed -e 's/^[ \t]*//')
+	_id_gpg_key=$(gpg --with-colons --list-secret-key "$_realname_gpg_key" | sed -n '5p' | cut -d ':' -f5)
 	# Ajout de la clé dans keychain
 	_cmd="keychain --eval --agents gpg $_id_gpg_key"
 	_cmd_text="Ajout de la clé gpg "$_id_gpg_key" dans keychain..."

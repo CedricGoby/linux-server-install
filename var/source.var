@@ -44,10 +44,14 @@ _src_msmtp="templates/msmtprc.src"
 _file_config_msmtp="/etc/msmtprc"
 _file_passwd_msmtp="/etc/.msmtp-password.gpg"
 _file_aliases_msmtp="/etc/aliases.msmtp"
+## gpg
+_dir_gpg_user="~/.gnupg"
+_file_gpg_conf="~/.gnupg/gpg.conf"
+_src_config_gpg="templates/gpg.conf.src"
 ## gpg-agent
 _dir_gpg_user="~/.gnupg"
-_file_config_gpg="~/.gnupg/gpg-agent.conf"
-_src_config_gpg="templates/gpg-agent.conf.src"
+_file_gpg_agent_conf="~/.gnupg/gpg-agent.conf"
+_src_config_gpg_agent="templates/gpg-agent.conf.src"
 ## fail2ban
 # Fichier source de configuration pour fail2ban
 _src_config_fail2ban="/etc/fail2ban/jail.conf"

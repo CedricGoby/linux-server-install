@@ -385,14 +385,14 @@ if f_check_for_package "$_package"; then
 	f_cmd "$_cmd" "$_cmd_text"
 
 	# Si le fichier gpg-agent.conf n'existe pas
-	if [ ! -f "$_file_gpg_conf" ]; then
+	if [ ! -f "$_file_gpg_agent_conf" ]; then
 		# on le crée
-		_cmd="cp "$_src_config_gpg" "$_file_config_gpg""
-		_cmd_text="Copie du fichier de configuration pour gpg..."
+		_cmd="cp "$_src_config_gpg_agent" "$_file_gpg_agent_conf""
+		_cmd_text="Copie du fichier de configuration pour gpg-agent..."
 		f_cmd "$_cmd" "$_cmd_text"
 		# on applique les droits
-		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_config_gpg""
-		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$_file_config_gpg"..."
+		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_gpg_agent_conf""
+		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$__file_gpg_agent_conf"..."
 		f_cmd "$_cmd" "$_cmd_text"		
 	fi
 
