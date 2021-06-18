@@ -99,10 +99,7 @@ done
 
 # Liste des programmes pré-requis
 # Attention à l'ordre d'installation des pkg de messagerie
-_required_packages=(software-properties-common \
-	dirmngr \
-	apt-transport-https \
-	lsb-release \
+_required_packages=(apt-transport-https \
 	ca-certificates \
 	msmtp \
 	msmtp-mta \
