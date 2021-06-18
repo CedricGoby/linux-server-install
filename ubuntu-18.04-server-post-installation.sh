@@ -149,7 +149,7 @@ read choice
 		[yYoO]*) read -r -p "Utilisateur machine distante : " _user
 				read -r -p "Clé publique SSH : " _public_key
 			# Si le répertoire .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
-			if [ ! -d "$_user/$_dir_ssh" ]; then
+			if [ ! -d "/$_user/$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
 				if [[ $_user != root ]]; then
 					_home="/home"

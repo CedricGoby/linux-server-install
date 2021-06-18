@@ -140,7 +140,7 @@ read choice
 		[yYoO]*) read -r -p "Utilisateur machine distante : " _user
 				read -r -p "Clé publique SSH : " _public_key
 			# Si le répertoire .ssh et le fichier .ssh/authorized_keys n'existent pas ils sont créés
-			if [ ! -d "$_dir_ssh" ]; then
+			if [ ! -d "/$_user/$_dir_ssh" ]; then
 				# Chemin si l'utilisateur n'est pas root
 				if [[ $_user != root ]]; then
 					_home="/home"
@@ -148,12 +148,13 @@ read choice
 				# Création du répertoire .ssh				
 				_cmd="mkdir "$_home/$_user/$_dir_ssh""
 				_cmd_text="Création du dossier "$_home/$_user/$_dir_ssh"..."
-				f_cmd "$_cmd" "$_cmd_text"
-				# Création du fichier .ssh/authorized_keys
-				_cmd="touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
-				_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
-				f_cmd "$_cmd" "$_cmd_text"						
+				f_cmd "$_cmd" "$_cmd_text"					
 			fi
+
+			# Création du fichier .ssh/authorized_keys
+			_cmd="touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
+			_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
+			f_cmd "$_cmd" "$_cmd_text"
 			
 			# Ajout de la clé publique dans le fichier ~/.ssh/authorized_keys
 			_cmd="echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys"
