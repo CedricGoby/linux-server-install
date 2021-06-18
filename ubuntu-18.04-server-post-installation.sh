@@ -103,9 +103,6 @@ _required_packages=(apt-transport-https \
 	msmtp \
 	msmtp-mta \
 	mailutils \
-	acl \
-	curl \
-	gnupg \
 	keychain
 )
 
