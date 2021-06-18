@@ -7,6 +7,6 @@
 #
 #docker
 # Debian
-docker	deb [arch=amd64] https://download.docker.com/linux/debian buster stable	deb
+#docker	deb [arch=amd64] https://download.docker.com/linux/debian buster stable	deb
 #grafana
 #grafana	deb https://packages.grafana.com/oss/deb stable main	deb

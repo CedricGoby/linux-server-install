@@ -48,6 +48,17 @@ f_check_for_package() {
 }
 
 #-----------------------------------------------------------------------
+# Figeage d'un paquet via les dépôts
+#-----------------------------------------------------------------------
+f_hold_package() {
+# 
+printf "\n%s\n" "Figeage de "$1"..."
+_cmd="apt-mark hold $1 >/dev/null 2>&1"
+_cmd_text="Figeage de $1..."
+f_cmd "$_cmd" "$_cmd_text"
+}
+
+#-----------------------------------------------------------------------
 # Installation d'un paquet via les dépôts
 #-----------------------------------------------------------------------
 f_install_package() {
