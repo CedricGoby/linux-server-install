@@ -2,13 +2,13 @@
 ## Commenter avec # pour ne pas traiter un paquet
 #
 #-- TEXT EDITOR --#
-#vim
+vim
 #-- SECURITE --#
 ufw
 fail2ban
 logwatch
 apticron
-certbot
+#certbot
 #mysecureshell
 #-- Containers --#
-#docker-ce
+docker-ce
