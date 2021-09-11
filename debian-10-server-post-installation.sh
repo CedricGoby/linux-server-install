@@ -90,7 +90,6 @@ f_cmd "$_cmd" "$_cmd_text"
 printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
 # Liste des programmes pré-requis
 _required_packages=(software-properties-common \
-	dirmngr \
 	apt-transport-https \
 	msmtp \
 	msmtp-mta \
