@@ -92,14 +92,10 @@ printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
 _required_packages=(software-properties-common \
 	dirmngr \
 	apt-transport-https \
-	lsb-release \
-	ca-certificates \
-	mailutils \
 	msmtp \
 	msmtp-mta \
 	acl \
 	curl \
-	gnupg \
 	keychain
 )
 # On installe chaque programme de la liste
