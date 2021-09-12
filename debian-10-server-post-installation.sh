@@ -95,7 +95,8 @@ _required_packages=(software-properties-common \
 	msmtp-mta \
 	acl \
 	curl \
-	keychain
+	keychain \
+	apache2-utils
 )
 # On installe chaque programme de la liste
 for _required_package_name in "${_required_packages[@]}"; do
