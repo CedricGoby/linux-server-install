@@ -3,7 +3,7 @@
 # Description : Opérations post installation pour Debian 10 server (buster).
 # Installation et/ou paramétrage de logiciels.
 # Usage : 
-# git clone https://gitlab.com/CedricGoby/linux-server-install.git \
+# git clone https://gitlab.com/CedricGoby/linux-server-install.git
 # cd linux-server-install
 # ./debian-10-server-post-install.sh
 # Licence : GPL-3+
@@ -92,6 +92,7 @@ printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
 # Liste des programmes pré-requis
 _required_packages=(software-properties-common \
 	apt-transport-https \
+	gnupg \
 	msmtp \
 	msmtp-mta \
 	acl \
