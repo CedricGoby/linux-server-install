@@ -364,17 +364,6 @@ if f_check_for_package "$_package"; then
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
 
-	# Si gpg démarre en mode "supervised" il ne permet pas le cache de clés entre sessions.
-	# Si c'est le cas on masque gpg pour sytemd afin que gpg démarre en mode "daemon"
-	systemctl --user status gpg-agent | grep supervised
-    if [ $? -eq 0 ]; then
-	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
-	_cmd_text="Masquage de gpg pour systemd..."
-	f_cmd "$_cmd" "$_cmd_text"	
-	else
-	printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
-    fi
-
 	# Premier appel à gpg pour créer les dossiers et fichiers
 	_cmd="gpg --list-keys"
 	_cmd_text="Création des dossiers et fichiers pour gnupg..."
@@ -441,6 +430,17 @@ EOF
 )
 	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
 	f_cmd "$_cmd" "$_cmd_text"
+
+	# Si gpg démarre en mode "supervised" il ne permet pas le cache de clés entre sessions.
+	# Si c'est le cas on masque gpg pour sytemd afin que gpg démarre en mode "daemon"
+	systemctl --user status gpg-agent | grep supervised
+    if [ $? -eq 0 ]; then
+	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
+	_cmd_text="Masquage de gpg pour systemd..."
+	f_cmd "$_cmd" "$_cmd_text"	
+	else
+	printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
+    fi
 
 ########################################################################
 # CONFIGURATION MSMTP
