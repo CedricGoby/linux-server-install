@@ -3,7 +3,8 @@
 # Description : Opérations post installation pour Debian 10 server (buster).
 # Installation et/ou paramétrage de logiciels.
 # Usage : 
-# git clone https://gitlab.com/CedricGoby/linux-server-install
+# git clone https://gitlab.com/CedricGoby/linux-server-install.git \
+# cd linux-server-install
 # ./debian-10-server-post-install.sh
 # Licence : GPL-3+
 # Auteur : Cédric Goby
