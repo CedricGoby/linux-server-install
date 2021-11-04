@@ -305,7 +305,7 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 				# Copie du fichier binaire et attribution des droits
 				if [[ $_type = "binary" ]] ; then
 					if [[ $_name = "docker-compose" ]] ; then
-						_binary_path="/usr/local/lib/docker/cli-plugins"
+						_binary_path="/usr/libexec/docker/cli-plugins"
 					else
 						_binary_path="/usr/local/bin/"
 					fi
