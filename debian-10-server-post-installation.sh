@@ -254,6 +254,19 @@ _cmd_text="Récupération de la liste des mises à jour..."
 f_cmd "$_cmd" "$_cmd_text"
 
 ########################################################################
+# INSTALLATION DE PAQUETS AVEC LES DEPÔTS
+########################################################################
+printf "\n%s\n" "INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
+
+# Installation des paquets listés dans le fichier pkg-in.list via les dépôts
+while IFS=$'\t' read _package; do
+	# Si le nom du paquet ne commence pas par # dans le fichier pkg-in.list on le traite
+	if [[ $_package != \#* ]] ; then
+	  f_install_package "$_package"
+	fi
+done <"$_src_pkg_in"
+
+########################################################################
 # TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS
 ########################################################################
 printf "\n%s\n" "TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS"
@@ -315,19 +328,6 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 		fi
 	fi
 done <"$_src_software_download"
-
-########################################################################
-# INSTALLATION DE PAQUETS AVEC LES DEPÔTS
-########################################################################
-printf "\n%s\n" "INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
-
-# Installation des paquets listés dans le fichier pkg-in.list via les dépôts
-while IFS=$'\t' read _package; do
-	# Si le nom du paquet ne commence pas par # dans le fichier pkg-in.list on le traite
-	if [[ $_package != \#* ]] ; then
-	  f_install_package "$_package"
-	fi
-done <"$_src_pkg_in"
 
 ########################################################################
 # CONFIGURATION DES PAQUETS
