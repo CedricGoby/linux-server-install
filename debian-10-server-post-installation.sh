@@ -307,10 +307,10 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 					if [[ $_name = "docker-compose" ]] ; then
 						_binary_path="/usr/libexec/docker/cli-plugins"
 					else
-						_binary_path="/usr/local/bin/"
+						_binary_path="/usr/local/bin"
 					fi
-				_cmd="mv $_name $_binary_path && chmod +x /usr/local/bin/$_name"
-				_cmd_text="Installation du fichier binaire $_name..."
+				_cmd="mv $_name $_binary_path/ && chmod +x $_binary_path/$_name"
+				_cmd_text="Installation du fichier binaire $_binary_path/$_name..."
 				f_cmd "$_cmd" "$_cmd_text"
 				else
 				# Installation du paquet deb avec gdebi
