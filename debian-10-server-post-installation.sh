@@ -291,7 +291,12 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 				# Installation du logiciel
 				# Copie du fichier binaire et attribution des droits
 				if [[ $_type = "binary" ]] ; then
-				_cmd="mv $_name /usr/local/bin/ && chmod +x /usr/local/bin/$_name"
+					if [[ $_name = "docker-compose" ]] ; then
+						_binary_path="/usr/local/lib/docker/cli-plugins"
+					else
+						_binary_path="/usr/local/bin/"
+					fi
+				_cmd="mv $_name $_binary_path && chmod +x /usr/local/bin/$_name"
 				_cmd_text="Installation du fichier binaire $_name..."
 				f_cmd "$_cmd" "$_cmd_text"
 				else
