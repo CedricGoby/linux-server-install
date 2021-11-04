@@ -66,7 +66,7 @@ fi
 ########################################################################
 # MISES A JOUR DU SYSTÈME
 ########################################################################
-printf "\n%s\n" "MISES A JOUR DU SYTÈME"
+printf "\n%s\n" "====== MISES A JOUR DU SYTÈME"
 
 # Test la présence du processus dpkg avec pidof
 # Il ne peut pas y avoir deux processus de mise à jour simultanés.
@@ -88,7 +88,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # INSTALLATION DE LOGICIELS PRÉ-REQUIS
 ########################################################################
-printf "\n%s\n" "INSTALLATION DE LOGICIELS PRÉ-REQUIS"
+printf "\n%s\n" "====== INSTALLATION DE LOGICIELS PRÉ-REQUIS"
 # Liste des programmes pré-requis
 _required_packages=(software-properties-common \
 	apt-transport-https \
@@ -129,7 +129,7 @@ fi
 ########################################################################
 # COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH
 ########################################################################
-printf "\n%s\n" "COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH"
+printf "\n%s\n" "====== COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH"
 
 printf "\n%s" "Souhaitez-vous copier une clé publique pour l'accès SSH ? (yYoO / nN)"
 
@@ -199,7 +199,7 @@ read choice
 ########################################################################
 # TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES
 ########################################################################
-printf "\n%s\n" "TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES"
+printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES"
 
 # Installation des clés GPG listées dans le fichier gpg-keys-download.list
 while IFS=$'\t' read _name _url _fingerprint; do
@@ -232,7 +232,7 @@ done <"$_src_gpg_keys_download"
 ########################################################################
 # AJOUTS DE DÉPÔTS DANS LA LISTE 
 ########################################################################
-printf "\n%s\n" "AJOUTS DE DÉPÔTS DANS LA LISTE"
+printf "\n%s\n" "====== AJOUTS DE DÉPÔTS DANS LA LISTE"
 
 # Installation des dépôts listés dans le fichier repository-in.list
 while IFS=$'\t' read _name _repository _type; do
@@ -256,7 +256,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # INSTALLATION DE PAQUETS AVEC LES DEPÔTS
 ########################################################################
-printf "\n%s\n" "INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
+printf "\n%s\n" "====== INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
 
 # Installation des paquets listés dans le fichier pkg-in.list via les dépôts
 while IFS=$'\t' read _package; do
@@ -269,7 +269,7 @@ done <"$_src_pkg_in"
 ########################################################################
 # TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS
 ########################################################################
-printf "\n%s\n" "TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS"
+printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS"
 
 ########################################################################
 # INSTALLATION DE GDEBI
@@ -332,12 +332,14 @@ done <"$_src_software_download"
 ########################################################################
 # CONFIGURATION DES PAQUETS
 ########################################################################
-printf "\n%s\n" "CONFIGURATION DES PAQUETS INSTALLÉS"
+printf "\n%s\n" "====== CONFIGURATION DES PAQUETS INSTALLÉS"
 
 ########################################################################
 # CONFIGURATION UFW
 ########################################################################
 _package="ufw"
+
+printf "\n%s\n" "=== CONFIGURATION DE $_package"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
 	printf "\n%s\n" "CONFIGURATION DE "$_package""
@@ -365,11 +367,12 @@ fi
 _package="msmtp"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE $_package"
 
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
+printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG"
 
 	# Premier appel à gpg pour créer les dossiers et fichiers
 	_cmd="gpg --list-keys"
@@ -452,7 +455,7 @@ EOF
 ########################################################################
 # CONFIGURATION MSMTP
 ########################################################################
-	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION $_package"
 	# Copie du fichier de configuration global pour msmtp
 	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
 	_cmd_text="Copie du fichier de configuration globale pour "$_package" (SMTP)..."
@@ -527,86 +530,12 @@ EOF
 fi
 
 ########################################################################
-# INSTALLATION D'APACHE (reverse proxy)
-########################################################################
-printf "\n%s" "Souhaitez-vous installer apache ? (yYoO / nN)"
-
-read choice
-	case $choice in
-		[yYoO]*)
-			_package="apache2"
-			f_install_package "$_package"
-
-			printf "\n%s\n" "CONFIGURATION DE "$_package""
-			# Activation de modules
-			_cmd="a2enmod \
-			ssl \
-			xml2enc \
-			proxy \
-			rewrite \
-			headers \
-			proxy_http \
-			proxy_wstunnel >/dev/null 2>>"$_file_logs""
-			_cmd_text="Activation de modules "$_package"..."
-			f_cmd "$_cmd" "$_cmd_text"
-
-			# Redémarrage d'apache
-			_cmd="systemctl restart "$_package" >/dev/null 2>>"$_file_logs""
-			_cmd_text="Redémarrage de "$_package"..."
-			f_cmd "$_cmd" "$_cmd_text";;			
-		[nN]*) printf "%s\n" ""$_package" ne sera pas installé. Suite du programme...";;
-		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
-	esac
-
-########################################################################
-# CRÉATION DU CERTIFICAT SSL LET'S ENCCRYPT
-########################################################################
-printf "\n%s" "Souhaitez-vous créer un certificat SSL (Wildcard) ? (yYoO / nN)"
-
-read choice
-	case $choice in
-		[yYoO]*) 
-			# certbot est installé si il n'est pas présent
-			_package="certbot"
-			f_install_package "$_package"
-
-			printf "\n%s\n" "CONFIGURATION DE "$_package""
-			# Arrêt d'apache si il fonctionne
-			_service="apache2"
-			if systemctl is-active --quiet "$_service" ; then
-				# Arrêt d'apache
-				_status="1"
-				_cmd="systemctl stop "$_service" >/dev/null 2>>"$_file_logs""
-				_cmd_text="Arrêt de "$_service"..."
-				f_cmd "$_cmd" "$_cmd_text"
-			fi
-
-			# Création du certificat SSL (Wildcard)
-			printf "\n%s\n" "Création du certificat SSL Let's Encrypt"
-			read -rs -p "Domaine du certificat SSL : " _domain
-			read -rs -p "Email attaché au certificat SSL : " _email_letsencrypt
-			_cmd="certbot certonly --standalone --non-interactive --agree-tos -m "$_email_letsencrypt" -d "$_domain" >> "$_file_logs""
-			_cmd_text="Création du certificat SSL Let's Encrypt pour "$_domain"..."
-			f_cmd "$_cmd" "$_cmd_text"			
-
-			# Redémarrage d'apache si il fonctionnait avant la création du certificat
-			if [[ $_status = 1 ]] ; then
-				# Démarrage d'apache
-				_cmd="systemctl start "$_service" >/dev/null 2>>"$_file_logs""
-				_cmd_text="Démarrage de "$_service"..."
-				f_cmd "$_cmd" "$_cmd_text"
-			fi;;			
-		[nN]*) printf "%s\n" "Pas de certificat à installer. Suite du programme...";;
-		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
-	esac
-
-########################################################################
 # CONFIGURATION FAIL2BAN
 ########################################################################
 _package="fail2ban"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
 	# Création du fichier de configuration
 	_cmd="cp "$_src_config_fail2ban" "$_file_config_fail2ban""
 	_cmd_text="Création du fichier de configuration "$_package" "$_file_config_fail2ban"..."
@@ -659,7 +588,7 @@ fi
 _package="logwatch"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
 	# Prompt utilisateur
 	read -r -p "Destinataire logwatch : " _mailto
 	read -r -p "Expéditeur logwatch : " _mailfrom
@@ -683,7 +612,7 @@ fi
 _package="apticron"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
 
 	# Si le fichier /etc/apticron/apticron.conf n'existe pas
 	if [ ! -f "$_file_config_apticron" ]; then
@@ -712,7 +641,7 @@ fi
 ########################################################################
 # MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
-printf "\n%s\n" "MISE EN PLACE DES TÂCHES PLANIFIÉES"
+printf "\n%s\n" "====== MISE EN PLACE DES TÂCHES PLANIFIÉES"
 
 # Sauvegarde du fichier /etc/crontab vers /etc/crontab.bak
 _cmd="cp $_file_crontab $_file_crontab.bak"
@@ -728,6 +657,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # ENVOI DES LOGS PAR EMAIL
 ########################################################################
+printf "\n%s\n" "====== ENVOI DES LOGS"
 printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"
 
 read choice
@@ -754,5 +684,5 @@ EOF"
 ########################################################################
 # FIN DE PROGRAMME
 ########################################################################
-printf "\n%s\n%s\n" "FIN DU PROGRAMME DE POST INSTALLATION!" "Vous pouvez consulter le fichier journal "$_file_logs""
+printf "\n%s\n%s\n" "====== FIN DU PROGRAMME DE POST INSTALLATION!" "Vous pouvez consulter le fichier journal "$_file_logs""
 exit 0
