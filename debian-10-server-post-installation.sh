@@ -66,7 +66,7 @@ fi
 ########################################################################
 # MISES A JOUR DU SYSTÈME
 ########################################################################
-printf "\n%s\n" "====== MISES A JOUR DU SYTÈME"
+printf "\n%s\n" "====== MISES A JOUR DU SYTÈME ======"
 
 # Test la présence du processus dpkg avec pidof
 # Il ne peut pas y avoir deux processus de mise à jour simultanés.
@@ -88,7 +88,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # INSTALLATION DE LOGICIELS PRÉ-REQUIS
 ########################################################################
-printf "\n%s\n" "====== INSTALLATION DE LOGICIELS PRÉ-REQUIS"
+printf "\n%s\n" "====== INSTALLATION DE LOGICIELS PRÉ-REQUIS ======"
 # Liste des programmes pré-requis
 _required_packages=(software-properties-common \
 	apt-transport-https \
@@ -129,7 +129,7 @@ fi
 ########################################################################
 # COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH
 ########################################################################
-printf "\n%s\n" "====== COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH"
+printf "\n%s\n" "====== COPIE D'UNE CLÉ PUBLIQUE POUR L'ACCÈS SSH ======"
 
 printf "\n%s" "Souhaitez-vous copier une clé publique pour l'accès SSH ? (yYoO / nN)"
 
@@ -199,7 +199,7 @@ read choice
 ########################################################################
 # TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES
 ########################################################################
-printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES"
+printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES ======"
 
 # Installation des clés GPG listées dans le fichier gpg-keys-download.list
 while IFS=$'\t' read _name _url _fingerprint; do
@@ -232,7 +232,7 @@ done <"$_src_gpg_keys_download"
 ########################################################################
 # AJOUTS DE DÉPÔTS DANS LA LISTE 
 ########################################################################
-printf "\n%s\n" "====== AJOUTS DE DÉPÔTS DANS LA LISTE"
+printf "\n%s\n" "====== AJOUTS DE DÉPÔTS DANS LA LISTE ======"
 
 # Installation des dépôts listés dans le fichier repository-in.list
 while IFS=$'\t' read _name _repository _type; do
@@ -256,7 +256,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # INSTALLATION DE PAQUETS AVEC LES DEPÔTS
 ########################################################################
-printf "\n%s\n" "====== INSTALLATION DE PAQUETS AVEC LES DEPÔTS"
+printf "\n%s\n" "====== INSTALLATION DE PAQUETS AVEC LES DEPÔTS ======"
 
 # Installation des paquets listés dans le fichier pkg-in.list via les dépôts
 while IFS=$'\t' read _package; do
@@ -269,7 +269,7 @@ done <"$_src_pkg_in"
 ########################################################################
 # TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS
 ########################################################################
-printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS"
+printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE LOGICIELS HORS DEPÔTS ======"
 
 ########################################################################
 # INSTALLATION DE GDEBI
@@ -332,14 +332,14 @@ done <"$_src_software_download"
 ########################################################################
 # CONFIGURATION DES PAQUETS
 ########################################################################
-printf "\n%s\n" "====== CONFIGURATION DES PAQUETS INSTALLÉS"
+printf "\n%s\n" "====== CONFIGURATION DES PAQUETS INSTALLÉS ======"
 
 ########################################################################
 # CONFIGURATION UFW
 ########################################################################
 _package="ufw"
 
-printf "\n%s\n" "=== CONFIGURATION DE $_package"
+printf "\n%s\n" "=== CONFIGURATION DE $_package ==="
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
 	printf "\n%s\n" "CONFIGURATION DE "$_package""
@@ -367,12 +367,12 @@ fi
 _package="msmtp"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "=== CONFIGURATION DE $_package"
+	printf "\n%s\n" "=== CONFIGURATION DE $_package ==="
 
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG
 ########################################################################
-printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG"
+printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG ==="
 
 	# Premier appel à gpg pour créer les dossiers et fichiers
 	_cmd="gpg --list-keys"
@@ -440,22 +440,25 @@ EOF
 )
 	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
 	f_cmd "$_cmd" "$_cmd_text"
-
-	# Si gpg démarre en mode "supervised" il ne permet pas le cache de clés entre sessions.
-	# Si c'est le cas on masque gpg pour sytemd afin que gpg démarre en mode "daemon"
-	systemctl --user status gpg-agent | grep supervised
-    if [ $? -eq 0 ]; then
-	_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
-	_cmd_text="Masquage de gpg pour systemd..."
-	f_cmd "$_cmd" "$_cmd_text"	
-	else
-	printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
-    fi
+	
+	# FIXME
+	# Au login gpg-agent démarre en mode "supervised" (systemd) alors qu'en ligne de commande
+	# (ou avec ce script) il démarre en mode "daemon".
+	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=850982
+	# Ceci empeĉhe d'accèder au cache des clés.
+	# On masque donc gpg à sytemd afin que gpg ne puisse pas démarrer en mode supervised
+	#if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
+	#_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
+	#_cmd_text="Masquage de gpg pour systemd..."
+	#f_cmd "$_cmd" "$_cmd_text"	
+	#else
+	#printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
+    #fi
 
 ########################################################################
 # CONFIGURATION MSMTP
 ########################################################################
-	printf "\n%s\n" "=== CONFIGURATION $_package"
+	printf "\n%s\n" "=== CONFIGURATION $_package ==="
 	# Copie du fichier de configuration global pour msmtp
 	_cmd="cp "$_src_msmtp" "$_file_config_msmtp""
 	_cmd_text="Copie du fichier de configuration globale pour "$_package" (SMTP)..."
@@ -535,7 +538,7 @@ fi
 _package="fail2ban"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package" ==="
 	# Création du fichier de configuration
 	_cmd="cp "$_src_config_fail2ban" "$_file_config_fail2ban""
 	_cmd_text="Création du fichier de configuration "$_package" "$_file_config_fail2ban"..."
@@ -588,7 +591,7 @@ fi
 _package="logwatch"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package" ==="
 	# Prompt utilisateur
 	read -r -p "Destinataire logwatch : " _mailto
 	read -r -p "Expéditeur logwatch : " _mailfrom
@@ -612,7 +615,7 @@ fi
 _package="apticron"
 # Si le paquet est installé
 if f_check_for_package "$_package"; then
-	printf "\n%s\n" "=== CONFIGURATION DE "$_package""
+	printf "\n%s\n" "=== CONFIGURATION DE "$_package" ==="
 
 	# Si le fichier /etc/apticron/apticron.conf n'existe pas
 	if [ ! -f "$_file_config_apticron" ]; then
@@ -641,7 +644,7 @@ fi
 ########################################################################
 # MISE EN PLACE DES TÂCHES PLANIFIÉES
 ########################################################################
-printf "\n%s\n" "====== MISE EN PLACE DES TÂCHES PLANIFIÉES"
+printf "\n%s\n" "====== MISE EN PLACE DES TÂCHES PLANIFIÉES ======"
 
 # Sauvegarde du fichier /etc/crontab vers /etc/crontab.bak
 _cmd="cp $_file_crontab $_file_crontab.bak"
@@ -657,7 +660,7 @@ f_cmd "$_cmd" "$_cmd_text"
 ########################################################################
 # ENVOI DES LOGS PAR EMAIL
 ########################################################################
-printf "\n%s\n" "====== ENVOI DES LOGS"
+printf "\n%s\n" "====== ENVOI DES LOGS ======"
 printf "\n%s" "Souhaitez-vous envoyer le rapport d'installation par email ? (yYoO / nN)"
 
 read choice
@@ -684,5 +687,5 @@ EOF"
 ########################################################################
 # FIN DE PROGRAMME
 ########################################################################
-printf "\n%s\n%s\n" "====== FIN DU PROGRAMME DE POST INSTALLATION!" "Vous pouvez consulter le fichier journal "$_file_logs""
+printf "\n%s\n%s\n" "====== FIN DU PROGRAMME DE POST INSTALLATION! ======" "Vous pouvez consulter le fichier journal "$_file_logs""
 exit 0
