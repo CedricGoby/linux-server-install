@@ -440,20 +440,6 @@ EOF
 )
 	_cmd_text="Modification du fichier $_file_bash_aliases pour keychain..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
-	# FIXME
-	# Au login gpg-agent démarre en mode "supervised" (systemd) alors qu'en ligne de commande
-	# (ou avec ce script) il démarre en mode "daemon".
-	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=850982
-	# Ceci empeĉhe d'accèder au cache des clés.
-	# On masque donc gpg à sytemd afin que gpg ne puisse pas démarrer en mode supervised
-	#if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
-	#_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
-	#_cmd_text="Masquage de gpg pour systemd..."
-	#f_cmd "$_cmd" "$_cmd_text"	
-	#else
-	#printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
-    #fi
 
 ########################################################################
 # CONFIGURATION MSMTP
@@ -656,6 +642,20 @@ _crontab_job="15 01   * * 0   root    /usr/bin/apt-get update && /usr/bin/apt-ge
 _cmd='echo -e "$_crontab_job" >> $_file_crontab'
 _cmd_text="Planification de la mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
+
+	# FIXME
+	# Au login gpg-agent démarre en mode "supervised" (systemd) alors qu'en ligne de commande
+	# (ou avec ce script) il démarre en mode "daemon".
+	# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=850982
+	# Ceci empeĉhe d'accèder au cache des clés.
+	# On masque donc gpg à sytemd lors du prochain login afin que gpg ne puisse pas démarrer en mode supervised
+	#if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
+	#_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
+	#_cmd_text="Masquage de gpg pour systemd..."
+	#f_cmd "$_cmd" "$_cmd_text"	
+	#else
+	#printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
+    #fi
 
 ########################################################################
 # ENVOI DES LOGS PAR EMAIL
