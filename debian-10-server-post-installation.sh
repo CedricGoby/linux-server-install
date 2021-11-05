@@ -155,7 +155,7 @@ read choice
 			f_cmd "$_cmd" "$_cmd_text"
 			
 			# Ajout de la clé publique dans le fichier ~/.ssh/authorized_keys
-			_cmd="echo -e "$_public_key" >> $_home/$_user/$_dir_ssh/$_file_authorized_keys"
+			_cmd="echo -e "$_public_key" > $_home/$_user/$_dir_ssh/$_file_authorized_keys"
 			_cmd_text="Ajout de la clé publique dans le fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
 
