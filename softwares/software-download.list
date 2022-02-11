@@ -7,9 +7,5 @@
 # Colonne 4 : Somme de contrôle
 # Colonne 5 : Type de fichier
 #
-# R Studio
-#rstudio-1.0.153-amd64.deb	https://download1.rstudio.org/rstudio-xenial-1.0.153-amd64.deb	md5sum	d584cbab01041777a15d62cbef69a976
-# Veracrypt
-#veracrypt-1.21-setup.tar.bz2	https://launchpad.net/veracrypt/trunk/1.21/+download/veracrypt-1.21-setup.tar.bz2 sha512sum	367f9c86e4106ed6589e256a89b4c6b75badcc22a37906182dfcb5dacf12a7b513a447a86b14384105295be2f7199d545e359c1edd468dc44c34639f63957a34
 # Docker Compose
 docker-compose	https://github.com/docker/compose/releases/download/v2.1.0/docker-compose-linux-x86_64	sha256sum	90990e7268e954e7930353650d7bcf5a37d29c77925ea2066335367b5f27ec9a	binary
