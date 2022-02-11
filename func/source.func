@@ -24,7 +24,7 @@ if [[ "$?" != 0 ]]; then
 	     exit 1;;
 	esac
 else
-    printf "%s\n" "$(date) $2 [ OK ]" | tee -a "$_file_logs"
+    printf "%s\n\n" "$(date) $2 [ OK ]" | tee -a "$_file_logs"
 fi
 }
 
