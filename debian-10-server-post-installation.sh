@@ -197,7 +197,7 @@ read choice
 	esac
 
 ########################################################################
-# TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES
+# TÉLÉCHARGEMENT ET INSTALLATION DEs CLÉS PUBLIQUES DES DËPOTS
 ########################################################################
 printf "\n%s\n" "====== TÉLÉCHARGEMENT ET INSTALLATION DE CLÉS PUBLIQUES ======"
 
@@ -281,7 +281,7 @@ _package="gdebi-core"
 f_install_package "$_package"
 
 ########################################################################
-# INSTALLATION DES LOGICIELS HORS DEPÔTS
+# INSTALLATION DES LOGICIELS HORS DEPÔTS AVEC GDEBI
 ########################################################################
 # Installation des logiciels listés dans le fichier software-download.list
 while IFS=$'\t' read _name _url _typesum _checksum _type; do
@@ -370,7 +370,8 @@ if f_check_for_package "$_package"; then
 	printf "\n%s\n" "=== CONFIGURATION DE $_package ==="
 
 ########################################################################
-# CRÉATION D'UNE PAIRE DE CLÉS GPG
+# CRÉATION D'UNE PAIRE DE CLÉS GPG POUR CHIFFRER / DECHIFFRER
+# LE MOT DE PASSE SMTP 
 ########################################################################
 printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG ==="
 
