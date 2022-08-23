@@ -8,4 +8,4 @@
 # Colonne 5 : Type de fichier
 #
 # Docker Compose
-docker-compose	https://github.com/docker/compose/releases/download/v2.2.3/docker-compose-linux-x86_64	sha256sum	f15a7cd54a85f760a8ece92da63fb85b93036c72ead8056391b8a3fe9dc73134	binary
+docker-compose	https://github.com/docker/compose/releases/download/v2.10.0/docker-compose-linux-x86_64	sha256sum	f15a7cd54a85f760a8ece92da63fb85b93036c72ead8056391b8a3fe9dc73134	binary
