@@ -7,4 +7,5 @@
 #
 #docker
 # Debian
-docker	deb [arch=amd64] https://download.docker.com/linux/debian buster stable	deb
+#docker	deb [arch=amd64] https://download.docker.com/linux/debian buster stable	deb
+docker	deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable	deb
