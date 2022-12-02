@@ -2,7 +2,7 @@
 
 # Description : Opérations post installation pour Debian 10 server (buster).
 # Installation et/ou paramétrage de logiciels.
-# Usage : 
+# Usage :
 # git clone https://gitlab.com/CedricGoby/linux-server-install.git
 # cd linux-server-install
 # ./debian-10-server-post-install.sh
@@ -98,7 +98,8 @@ _required_packages=(software-properties-common \
 	acl \
 	curl \
 	keychain \
-	apache2-utils
+	apache2-utils \
+	screen
 )
 # On installe chaque programme de la liste
 for _required_package_name in "${_required_packages[@]}"; do
@@ -143,17 +144,17 @@ read choice
 				if [[ $_user != root ]]; then
 					_home="/home"
 				fi
-				# Création du répertoire .ssh				
+				# Création du répertoire .ssh
 				_cmd="mkdir "$_home/$_user/$_dir_ssh""
 				_cmd_text="Création du dossier "$_home/$_user/$_dir_ssh"..."
-				f_cmd "$_cmd" "$_cmd_text"					
+				f_cmd "$_cmd" "$_cmd_text"
 			fi
 
 			# Création du fichier .ssh/authorized_keys
 			_cmd="touch "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
 			_cmd_text="Création du fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
-			
+
 			# Ajout de la clé publique dans le fichier ~/.ssh/authorized_keys
 			_cmd="echo -e "$_public_key" > $_home/$_user/$_dir_ssh/$_file_authorized_keys"
 			_cmd_text="Ajout de la clé publique dans le fichier "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
@@ -163,20 +164,20 @@ read choice
 			_cmd="chown -R "$_user" "$_home/$_user/$_dir_ssh""
 			_cmd_text="Propriété du répertoire "$_home/$_user/$_dir_ssh"..."
 			f_cmd "$_cmd" "$_cmd_text"
-			
+
 			_cmd="chmod 700 "$_home/$_user/$_dir_ssh""
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh"..."
-			f_cmd "$_cmd" "$_cmd_text"			
-			
+			f_cmd "$_cmd" "$_cmd_text"
+
 			_cmd="chmod 600 "$_home/$_user/$_dir_ssh/$_file_authorized_keys""
 			_cmd_text="Application des droits sur "$_home/$_user/$_dir_ssh/$_file_authorized_keys"..."
 			f_cmd "$_cmd" "$_cmd_text"
-						
+
 ########################################################################
 # INTERDICTION DE L'ACCÈS SSH PAR MOT DE PASSE
 ########################################################################
 			printf "\n%s" "Souhaitez-vous interdire l'authentification SSH par mot de passe ? (yYoO / nN)"
-			
+
 			read choice
 				case $choice in
 							# On remplace "#PasswordAuthentication yes" par "PasswordAuthentication no" dans le fichier /etc/ssh/sshd_config
@@ -186,12 +187,12 @@ read choice
 				  [nN]*) printf "%s\n" "Suite du programme...";;
 				  *) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 				esac
-			
+
 			# Redémarrage du service SSH
 			_cmd="systemctl restart sshd >/dev/null 2>>"$_file_logs""
 			_cmd_text="Redémarrage du service SSH..."
-			f_cmd "$_cmd" "$_cmd_text";;			
-			
+			f_cmd "$_cmd" "$_cmd_text";;
+
 		[nN]*) printf "%s\n" "Aucune clé à copier. Suite du programme...";;
 		*) printf "%s\n" "Erreur de saisie. Suite du programme...";;
 	esac
@@ -221,7 +222,7 @@ while IFS=$'\t' read _name _url _fingerprint; do
 				else
 				# Echec de la vérification de l'empreinte de la clé
 				printf "%s\n" "La vérification de l'empreinte de la clé a échoué pour $_name, arrêt de la procédure d'installation de $_name... [ AVERTISSEMENT ]"
-			fi			
+			fi
 		else
 			# Clé non disponible au téléchargement
 			printf "\n%s\n" "Le fichier distant $_name n'existe pas ou est temporairement indisponible, arrêt de la procédure d'installation de $_name... [ AVERTISSEMENT ]"
@@ -230,7 +231,7 @@ while IFS=$'\t' read _name _url _fingerprint; do
 done <"$_src_gpg_keys_download"
 
 ########################################################################
-# AJOUTS DE DÉPÔTS DANS LA LISTE 
+# AJOUTS DE DÉPÔTS DANS LA LISTE
 ########################################################################
 printf "\n%s\n" "====== AJOUTS DE DÉPÔTS DANS LA LISTE ======"
 
@@ -316,12 +317,12 @@ while IFS=$'\t' read _name _url _typesum _checksum _type; do
 				# Installation du paquet deb avec gdebi
 				_cmd="gdebi --n $_name"
 				_cmd_text="Installation du paquet deb $_name..."
-				f_cmd "$_cmd" "$_cmd_text"				
+				f_cmd "$_cmd" "$_cmd_text"
 				fi
 			else
 				# Echec de la vérification de la somme de contrôle, le logiciel ne sera pas installé
 				printf "%s\n" "La vérification de la somme de contrôle a échoué pour $_name, arrêt de la procédure d'installation de $_name... [ AVERTISSEMENT ]"
-			fi			
+			fi
 		else
 			# Paquet non disponible au téléchargement
 			printf "\n%s\n" "Le fichier distant $_name n'existe pas ou est temporairement indisponible, arrêt de la procédure d'installation de $_name... [ AVERTISSEMENT ]"
@@ -371,7 +372,7 @@ if f_check_for_package "$_package"; then
 
 ########################################################################
 # CRÉATION D'UNE PAIRE DE CLÉS GPG POUR CHIFFRER / DECHIFFRER
-# LE MOT DE PASSE SMTP 
+# LE MOT DE PASSE SMTP
 ########################################################################
 printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG ==="
 
@@ -389,7 +390,7 @@ printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG ==="
 		# on applique les droits
 		_cmd="chmod 700 "$_dir_gpg_user" && chmod 600 "$_file_gpg_agent_conf""
 		_cmd_text="Application des droits sur "$_dir_gpg_user" et "$__file_gpg_agent_conf"..."
-		f_cmd "$_cmd" "$_cmd_text"		
+		f_cmd "$_cmd" "$_cmd_text"
 	fi
 
 # Création de la paire de clés pour chiffrer le fichier de mot de passe
@@ -401,7 +402,7 @@ printf "\n%s\n" "=== CRÉATION D'UNE PAIRE DE CLÉS GPG ==="
 	# création d'un fichier temporaire supprimé à la sortie du script
 	trap 'rm -f "$_file_temp_gpg_password"' EXIT
 	_file_temp_gpg_password=$(mktemp) || exit 1
-	
+
 	# Création du fichier d'options pour les clés gpg
 	cmd=$(cat >$_file_temp_gpg_password <<	EOF
      %echo Generating an OpenPGP key
@@ -469,7 +470,7 @@ EOF
 	_cmd="echo "$_password" > /etc/.msmtp-password"
 	_cmd_text="Copie du mot de passe SMTP dans un fichier temporaire..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Chiffrement du fichier de mot de passe SMTP
 	# GPG doit savoir qui va ouvrir le fichier et qui l'envoi. Puisque le fichier est pour vous,
 	# il est inutile de spécifier un expéditeur, et vous êtes le destinataire.
@@ -477,7 +478,7 @@ EOF
 	_cmd="gpg -e -r "$_login" /etc/.msmtp-password"
 	_cmd_text="Chiffrement du fichier de mot de passe SMTP..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Suppression du fichier temporaire contenant le mot de passe SMTP
 	_cmd="rm /etc/.msmtp-password"
 	_cmd_text="Suppression du fichier temporaire contenant le mot de passe SMTP..."
@@ -490,7 +491,7 @@ EOF
 )
 	_cmd_text="Création du fichier $_file_aliases_msmtp..."
 	f_cmd "$_cmd" "$_cmd_text"
-		
+
 	# Insertion d'antislash devant les caractères ayant une signification pour sed
 	_password="$(<<< "$_password" sed -e 's`[][\\/.*^$]`\\&`g')"
 	_file_passwd_msmtp="$(<<< "$_file_passwd_msmtp" sed -e 's`[][\\/.*^$]`\\&`g')"
@@ -530,13 +531,13 @@ if f_check_for_package "$_package"; then
 	_cmd="cp "$_src_config_fail2ban" "$_file_config_fail2ban""
 	_cmd_text="Création du fichier de configuration "$_package" "$_file_config_fail2ban"..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Activation de la prison SSH
 	_jail="ssh"
 	_cmd="sed -i '/^\[sshd\]/a enabled = true' "$_file_config_fail2ban""
 	_cmd_text="Activation de la prison "$_jail"..."
 	f_cmd "$_cmd" "$_cmd_text"
-	
+
 	# Activation de la prison APACHE
 	_jail="apache2"
 	if f_check_for_package "$_jail"; then
@@ -558,9 +559,9 @@ if f_check_for_package "$_package"; then
 		_cmd="sed -i -e 's/banaction = iptables-multiport/banaction = ufw/' \
 		-e 's/banaction_allports = iptables-allports/banaction_allports = ufw/' $_file_config_fail2ban"
 		_cmd_text="Configuration de fail2ban avec ufw..."
-		f_cmd "$_cmd" "$_cmd_text"		
+		f_cmd "$_cmd" "$_cmd_text"
 	fi
-	
+
 	# Rechargement de la configuration fail2ban
 	_cmd="fail2ban-client reload >/dev/null 2>>"$_file_logs""
 	_cmd_text="Rechargement de la configuration "$_package"..."
@@ -653,7 +654,7 @@ f_cmd "$_cmd" "$_cmd_text"
 	#if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
 	#_cmd="systemctl --user mask --now gpg-agent.service gpg-agent.socket gpg-agent-ssh.socket gpg-agent-extra.socket gpg-agent-browser.socket"
 	#_cmd_text="Masquage de gpg pour systemd..."
-	#f_cmd "$_cmd" "$_cmd_text"	
+	#f_cmd "$_cmd" "$_cmd_text"
 	#else
 	#printf "\n%s\n" "gpg-agent est en mode daemon, rien à faire..."
     #fi
@@ -668,10 +669,10 @@ read choice
 	case $choice in
 		[yYoO]*)
 			# Envoi du fichier de logs par email
-			printf "\n%s\n" "Envoi du fichier de logs par email"			
+			printf "\n%s\n" "Envoi du fichier de logs par email"
 			read -p "Destinataire des logs : " _mailto
-			read -p "Expéditeur des logs : " _mailfrom	
-								
+			read -p "Expéditeur des logs : " _mailfrom
+
 			_cmd="msmtp -d -a default -t >/dev/null 2>>"$_file_logs" <<EOF
 From: $_mailfrom
 To: $_mailto
