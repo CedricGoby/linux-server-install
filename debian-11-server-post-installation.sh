@@ -106,12 +106,6 @@ for _required_package_name in "${_required_packages[@]}"; do
 	f_install_package "$_required_package_name"
 done
 
-# On clone le dépôt pour Traefik & portainer
-_repository="https://forgemia.inra.fr/cedric.goby/traefik-portainer-compose.git"
-_cmd="git clone "$_repository" ./"
-_cmd_text="Clonage du dépôt..."
-f_cmd "$_cmd" "$_cmd_text"
-
 ########################################################################
 # MISE EN PLACE DU FICHIER BASH ALIASES
 ########################################################################
