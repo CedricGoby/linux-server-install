@@ -5,7 +5,7 @@
 # Usage :
 # git clone https://gitlab.com/CedricGoby/linux-server-install.git
 # cd linux-server-install
-# ./debian-10-server-post-install.sh
+# ./debian-11-server-post-install.sh
 # Licence : GPL-3+
 # Auteur : Cédric Goby
 # Versioning : https://gitlab.com/CedricGoby/linux-server-install
