@@ -95,6 +95,7 @@ _required_packages=(software-properties-common \
 	gnupg \
 	msmtp \
 	msmtp-mta \
+	rsync \
 	acl \
 	curl \
 	keychain \
