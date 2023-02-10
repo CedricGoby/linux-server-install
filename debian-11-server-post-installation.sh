@@ -625,6 +625,16 @@ EOF
 		f_cmd "$_cmd" "$_cmd_text"
 	fi
 
+	# Modification du fichier /etc/cron.d/apticron
+	_cmd=$(cat >/etc/cron.d/apticron <<	EOF
+# cron entry for apticron
+
+30 6 * * * root if test -x /usr/sbin/apticron; then /usr/sbin/apticron --cron; else true; fi
+EOF
+)
+	_cmd_text="Modification du fichier /etc/cron.d/apticron..."
+	f_cmd "$_cmd" "$_cmd_text"
+
 # Envoi du mail apticron
 _cmd="apticron"
 _cmd_text="Envoi du mail apticron..."
