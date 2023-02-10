@@ -619,7 +619,7 @@ if f_check_for_package "$_package"; then
 EMAIL="$_mailto"
 CUSTOM_FROM="$_mailfrom"
 NOTIFY_NO_UPDATES="1"
-CUSTOM_SUBJECT="$(hostname) [apticron] : \\\$NUM_PACKAGES mise(s)-à-jour disponible(s)"
+CUSTOM_SUBJECT="$(hostname) [apticron] : \\\$NUM_PACKAGES mises à jour disponible(s)"
 EOF
 )
 		_cmd_text="Création du fichier /etc/apticron/apticron.conf..."
