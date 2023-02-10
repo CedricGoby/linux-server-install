@@ -99,7 +99,8 @@ _required_packages=(software-properties-common \
 	curl \
 	keychain \
 	apache2-utils \
-	screen
+	screen \
+	tree
 )
 # On installe chaque programme de la liste
 for _required_package_name in "${_required_packages[@]}"; do
