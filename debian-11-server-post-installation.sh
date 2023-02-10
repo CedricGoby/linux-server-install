@@ -614,7 +614,7 @@ if f_check_for_package "$_package"; then
 		read -r -p "Expéditeur apticron : " _mailfrom
 		# Création du fichier /etc/apticron/apticron.conf
 		# NOTIFY_NO_UPDATES="1" --> Envoi du rapport même si aucune mise à jour n'est disponible
-		# Toutes les variables passées à CUSTOM_SUBJECT doivent être échappées avec un "\"
+		# Toutes les variables apticron passées à CUSTOM_SUBJECT doivent être échappées avec un "\"
 		_cmd=$(cat >"$_file_config_apticron" <<	EOF
 EMAIL="$_mailto"
 CUSTOM_FROM="$_mailfrom"
