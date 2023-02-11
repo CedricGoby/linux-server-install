@@ -653,7 +653,7 @@ _cmd_text="Sauvegarde du fichier $_file_crontab vers $_file_crontab.bak"
 f_cmd "$_cmd" "$_cmd_text"
 
 # Planification des mises à jour avec /etc/crontab
-_crontab_job="15 01   * * 0   root    /usr/bin/apt-get update && /usr/bin/apt-get -y upgrade && /usr/bin/apt-get -y autoremove >/dev/null"
+_crontab_job="00 2   * * *   root    /usr/bin/apt-get update && /usr/bin/apt-get -y upgrade && /usr/bin/apt-get -y autoremove >/dev/null"
 _cmd='echo -e "$_crontab_job" >> $_file_crontab'
 _cmd_text="Planification de la mise à jour du système..."
 f_cmd "$_cmd" "$_cmd_text"
