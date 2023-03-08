@@ -212,6 +212,7 @@ while IFS=$'\t' read _name _url _fingerprint; do
 		curl --output /dev/null --silent --head --fail "$_url"
 		if [[ "$?" = 0 ]]; then
 			# Téléchargement et installation de la clé
+			# FIXME "Warning: apt-key is deprecated. Manage keyring files in trusted.gpg.d instead (see apt-key(8))."
 			_cmd="curl -fsSL $_url | apt-key add -"
 			_cmd_text="Téléchargement et installation de la clé pour $_name..."
 			f_cmd "$_cmd" "$_cmd_text"
